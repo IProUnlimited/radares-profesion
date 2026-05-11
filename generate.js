@@ -209,12 +209,34 @@ function indexHtml(profs) {
 }
 
 // ── Generación ─────────────────────────────────────────────────────────────
-let count = 0;
-for (const [key, p] of Object.entries(PROFS)) {
-  const file = path.join(ROOT, `radar-${key}.html`);
-  fs.writeFileSync(file, radarHtml(key, p), "utf8");
-  count++;
-  console.log(`✓ radar-${key}.html`);
+function generate() {
+  let count = 0;
+  for (const [key, p] of Object.entries(PROFS)) {
+    const file = path.join(ROOT, `radar-${key}.html`);
+    fs.writeFileSync(file, radarHtml(key, p), "utf8");
+    count++;
+    console.log(`✓ radar-${key}.html`);
+  }
+  fs.writeFileSync(path.join(ROOT, "index.html"), indexHtml(PROFS), "utf8");
+  console.log(`✓ index.html\n${count} radares generados en ${ROOT}`);
 }
-fs.writeFileSync(path.join(ROOT, "index.html"), indexHtml(PROFS), "utf8");
-console.log(`✓ index.html\n\n${count} radares generados en ${ROOT}`);
+
+// Modo generación normal
+if (!process.argv.includes('--watch')) {
+  generate();
+} else {
+  // Modo watch
+  console.log('👀 Modo watch activado. Regenerando cuando cambie professions.json...\n');
+  generate();
+  fs.watchFile(path.join(ROOT, 'professions.json'), () => {
+    console.log('\n📝 professions.json cambió, regenerando...\n');
+    try {
+      delete require.cache[require.resolve(path.join(ROOT, 'professions.json'))];
+      const PROFS_NEW = JSON.parse(fs.readFileSync(path.join(ROOT, 'professions.json'), 'utf8'));
+      Object.assign(PROFS, PROFS_NEW);
+      generate();
+    } catch (e) {
+      console.error('❌ Error:', e.message);
+    }
+  });
+}
