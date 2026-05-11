@@ -28,46 +28,20 @@ function radarHtml(key, p) {
 <meta charset="utf-8">
 <title>Radar ${htmlEscape(p.label)} — IWPro</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="styles.css">
 <style>
-:root{--c:${p.color};--bg:#0b1220;--panel:#111a2e;--text:#e5e7eb;--muted:#94a3b8;--border:#1e293b}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
-header{padding:32px 24px;background:linear-gradient(135deg,var(--c) 0%,#0b1220 80%);border-bottom:1px solid var(--border)}
-header .icon{font-size:48px;line-height:1}
-header h1{margin:8px 0 4px;font-size:28px}
-header p{margin:0;color:#cbd5e1}
-.back{color:#cbd5e1;text-decoration:none;font-size:14px}
-main{max-width:980px;margin:0 auto;padding:24px}
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px}
-.panel h2{margin:0 0 12px;font-size:16px;color:var(--c);text-transform:uppercase;letter-spacing:.5px}
-.row{display:flex;gap:12px;flex-wrap:wrap}
-.row input,.row select{flex:1;min-width:160px;background:#0b1220;border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;font-size:14px}
-.row button{background:var(--c);border:0;color:#fff;font-weight:600;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:14px}
-.row button:hover{filter:brightness(1.1)}
-.row button:disabled{opacity:.5;cursor:not-allowed}
-ul.services{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px 16px;list-style:none;padding:0;margin:0}
-ul.services li{padding:6px 0;color:#cbd5e1;font-size:14px;border-bottom:1px dashed var(--border)}
-.meta{display:flex;gap:24px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
-.meta b{color:var(--text)}
-#results{display:grid;gap:10px}
-.lead{background:#0b1220;border:1px solid var(--border);border-radius:8px;padding:12px}
-.lead h3{margin:0 0 4px;font-size:15px}
-.lead .l-meta{color:var(--muted);font-size:12px}
-.score{display:inline-block;background:var(--c);color:#fff;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;margin-left:8px}
-.empty{color:var(--muted);text-align:center;padding:24px;font-size:14px}
-.error{color:#fca5a5;font-size:13px;margin-top:8px}
-footer{text-align:center;padding:24px;color:var(--muted);font-size:12px}
+:root{--c:${p.color}}
 </style>
 </head>
 <body>
-<header>
+<header class="radar-header">
   <a href="index.html" class="back">← Todos los radares</a>
   <div class="icon">${p.icon}</div>
   <h1>Radar ${htmlEscape(p.label)}</h1>
   <p>Captación de leads especializada para ${htmlEscape(p.label.toLowerCase())}</p>
 </header>
-<main>
-  <div id="fileWarn" style="display:none;background:#7f1d1d;color:#fee2e2;padding:12px 16px;border-radius:8px;margin-bottom:16px;font-size:14px">
+<main class="radar-main">
+  <div id="fileWarn" class="file-warn" style="display:none">
   ⚠ Estás abriendo este radar como archivo local. El backend rechaza CORS desde <code>file://</code>.<br>
   Ejecuta <code>node serve.js</code> en <code>C:\\Radares-Profesion</code> y abre <code>http://localhost:8080</code>.
   </div>
@@ -183,7 +157,7 @@ async function generate(){
 
 function render(data){
   const leads = data.leads || [];
-  if(!leads.length){ out.innerHTML = '<div class="empty">No se encontraron leads ('+(data.message||'')+'</div>'; return; }
+  if(!leads.length){ out.innerHTML = '<div class="empty">No se encontraron leads'+(data.message ? ': '+escapeH(data.message) : '')+'</div>'; return; }
   out.innerHTML = leads.map(l => {
     const raw = l.raw_data || {};
     const score = raw.priority_score || l.priority_score || '';
@@ -198,7 +172,7 @@ function render(data){
       +'</div>';
   }).join('');
 }
-function escapeH(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\\"":"&quot;","'":"&#39;"}[c]));}
+function escapeH(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));}
 btn.addEventListener('click', generate);
 $('#city').addEventListener('keydown', e=>{ if(e.key==='Enter') generate(); });
 </script>
@@ -207,34 +181,28 @@ $('#city').addEventListener('keydown', e=>{ if(e.key==='Enter') generate(); });
 }
 
 function indexHtml(profs) {
-  const cards = Object.entries(profs).map(([key, p]) => `
+  const cards = Object.entries(profs).map(([key, p]) => {
+    const sourcesText = p.sources.length
+      ? p.sources.length + (p.sources.length === 1 ? ' fuente' : ' fuentes')
+      : 'directorios públicos';
+    return `
     <a class="card" href="radar-${key}.html" style="--c:${p.color}">
       <div class="ico">${p.icon}</div>
       <div class="lbl">${htmlEscape(p.label)}</div>
-      <div class="sub">×${p.multiplier} · ${p.sources.length ? p.sources.length + ' fuentes' : 'directorios públicos'}</div>
-    </a>`).join("");
+      <div class="sub">×${p.multiplier} · ${sourcesText}</div>
+    </a>`;
+  }).join("");
   return `<!doctype html>
 <html lang="es"><head><meta charset="utf-8">
 <title>Radares por Profesión — IWPro</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#0b1220;color:#e5e7eb}
-header{padding:48px 24px;text-align:center;background:linear-gradient(135deg,#1e3a8a,#0b1220)}
-header h1{margin:0 0 8px;font-size:34px}
-header p{margin:0;color:#cbd5e1}
-main{max-width:1200px;margin:0 auto;padding:32px 24px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
-.card{display:block;background:#111a2e;border:1px solid #1e293b;border-top:4px solid var(--c);border-radius:12px;padding:20px;text-decoration:none;color:#e5e7eb;transition:transform .15s,border-color .15s}
-.card:hover{transform:translateY(-2px);border-color:var(--c)}
-.ico{font-size:36px;margin-bottom:8px}
-.lbl{font-weight:600;font-size:16px;margin-bottom:4px}
-.sub{color:#94a3b8;font-size:12px}
-footer{text-align:center;padding:24px;color:#94a3b8;font-size:12px}
-</style></head>
+<link rel="stylesheet" href="styles.css">
+</head>
 <body>
-<header><h1>Radares Especializados por Profesión</h1>
-<p>22 radares conectados al CRM Propium · Inmoworking Pro</p></header>
+<header>
+  <h1>Radares Especializados por Profesión</h1>
+  <p>22 radares conectados al CRM Propium · Inmoworking Pro</p>
+</header>
 <main><div class="grid">${cards}</div></main>
 <footer>Cada radar dispara las fuentes específicas de su profesión y aplica el multiplicador de score sectorial.</footer>
 </body></html>`;
