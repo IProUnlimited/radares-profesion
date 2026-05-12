@@ -481,6 +481,29 @@ function indexHtml(profs) {
 <script>const t=localStorage.getItem('theme')||'auto';const d=window.matchMedia('(prefers-color-scheme:dark)').matches;const isDark=t==='auto'?d:t==='dark';document.documentElement.classList.toggle('dark-mode',isDark);</script>
 </head>
 <body>
+<div id="loginPanel" style="position:fixed;inset:0;background:linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px">
+  <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:12px;padding:40px;width:100%;max-width:420px;box-shadow:0 10px 40px rgba(0,0,0,0.2)">
+    <div style="text-align:center;margin-bottom:32px">
+      <h1 style="margin:0 0 8px 0;font-size:28px">Nexo Leads</h1>
+      <p style="margin:0;color:var(--text-muted);font-size:14px">Acceso a plataforma de leads especializados</p>
+    </div>
+    <form id="loginForm" style="display:flex;flex-direction:column;gap:16px">
+      <div>
+        <label style="display:block;margin-bottom:8px;font-size:13px;font-weight:600;color:var(--text-primary)">Email</label>
+        <input id="loginEmail" type="email" placeholder="tu@email.com" required style="width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--input-bg);color:var(--text-primary);font-size:14px;box-sizing:border-box">
+      </div>
+      <div>
+        <label style="display:block;margin-bottom:8px;font-size:13px;font-weight:600;color:var(--text-primary)">Contraseña</label>
+        <input id="loginPassword" type="password" placeholder="••••••••" required style="width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--input-bg);color:var(--text-primary);font-size:14px;box-sizing:border-box">
+      </div>
+      <div id="loginError" style="color:#dc2626;font-size:13px;display:none;text-align:center;padding:12px;background:rgba(220,38,38,0.1);border-radius:6px"></div>
+      <button type="submit" style="background:#3b82f6;color:white;border:none;padding:12px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px;transition:background 0.2s">Iniciar sesión</button>
+    </form>
+    <p style="text-align:center;margin-top:16px;font-size:13px;color:var(--text-muted)">Las credenciales se envían de forma segura</p>
+  </div>
+</div>
+
+<div id="appContent" style="display:none">
 <header style="display:flex;justify-content:space-between;align-items:center">
   <div>
     <h1>Nexo Leads</h1>
@@ -488,6 +511,7 @@ function indexHtml(profs) {
   </div>
   <div style="display:flex;gap:12px;align-items:center;height:fit-content">
     <a href="tracker.html" style="text-decoration:none;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.4);padding:8px 16px;border-radius:8px;color:var(--accent);font-weight:600;font-size:13px">📋 Tracker</a>
+    <button id="logoutBtn" style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);padding:8px 16px;border-radius:8px;color:#ef4444;font-weight:600;font-size:13px;cursor:pointer;text-decoration:none">🚪 Salir</button>
     <button id="themeToggle" style="background:none;border:none;font-size:24px;cursor:pointer">🌙</button>
   </div>
 </header>
@@ -512,7 +536,37 @@ function indexHtml(profs) {
   </div>
 </main>
 <footer style="border-top:1px solid var(--border);padding:16px 24px;margin-top:40px;display:flex;justify-content:space-between;align-items:center;gap:24px;font-size:13px;color:var(--text-muted)"><span>Nexo Leads · Radares Especializados</span><span style="display:flex;gap:16px"><a href="privacy.html" style="color:var(--accent);text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:var(--accent);text-decoration:none">Cookies</a></span></footer>
+</div>
 <script>
+// ─── Authentication ───────────────────────────────────────────────
+const API_BASE = 'https://crm-agente-api.onrender.com';
+function getToken() { return localStorage.getItem('iwp_token') || ''; }
+function setToken(v) { localStorage.setItem('iwp_token', v); }
+function clearToken() { localStorage.removeItem('iwp_token'); document.getElementById('loginPanel').style.display = 'flex'; document.getElementById('appContent').style.display = 'none'; }
+
+const loginForm = document.getElementById('loginForm');
+const loginError = document.getElementById('loginError');
+const loginPanel = document.getElementById('loginPanel');
+const appContent = document.getElementById('appContent');
+const logoutBtn = document.getElementById('logoutBtn');
+
+if(getToken()) { loginPanel.style.display = 'none'; appContent.style.display = 'block'; }
+
+loginForm.onsubmit = async(e) => {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  loginError.style.display = 'none';
+  try {
+    const r = await fetch(API_BASE + '/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email, password}) });
+    const data = await r.json();
+    if(r.ok && data.token) { setToken(data.token); loginPanel.style.display = 'none'; appContent.style.display = 'block'; }
+    else { loginError.textContent = data.error || 'Credenciales inválidas'; loginError.style.display = 'block'; }
+  } catch(err) { loginError.textContent = 'Error: ' + err.message; loginError.style.display = 'block'; }
+};
+logoutBtn.onclick = clearToken;
+
+// ─── Search & Filters ─────────────────────────────────────────────
 const PROFESSIONS = ${JSON.stringify(profsData)};
 const searchInput = document.getElementById('searchInput');
 const categoryFilter = document.getElementById('categoryFilter');
