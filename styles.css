@@ -5,6 +5,10 @@
   --bg: #0a0e27;
   --bg-secondary: #0f1629;
   --panel: #111a2e;
+  --panel-bg: rgba(17, 26, 46, 0.7);
+  --panel-bg-hover: rgba(17, 26, 46, 0.9);
+  --input-bg: rgba(10, 14, 39, 0.8);
+  --card-bg: rgba(17, 26, 46, 0.7);
   --text: #f0f4f8;
   --text-muted: #a0aec0;
   --border: #1e293b;
@@ -21,15 +25,23 @@ html.dark-mode {
   --bg: #0a0e27;
   --bg-secondary: #0f1629;
   --panel: #111a2e;
+  --panel-bg: rgba(17, 26, 46, 0.7);
+  --panel-bg-hover: rgba(17, 26, 46, 0.9);
+  --input-bg: rgba(10, 14, 39, 0.8);
+  --card-bg: rgba(17, 26, 46, 0.7);
   --text: #f0f4f8;
   --text-muted: #a0aec0;
   --border: #1e293b;
 }
 
-html.light-mode {
+html.light-mode, html:not(.dark-mode) {
   --bg: #f8fafc;
   --bg-secondary: #f1f5f9;
   --panel: #ffffff;
+  --panel-bg: rgba(255, 255, 255, 0.95);
+  --panel-bg-hover: rgba(255, 255, 255, 1);
+  --input-bg: rgba(241, 245, 249, 0.9);
+  --card-bg: rgba(255, 255, 255, 0.9);
   --text: #0f172a;
   --text-muted: #64748b;
   --border: #e2e8f0;
@@ -109,7 +121,7 @@ main {
 
 .card {
   display: block;
-  background: rgba(17, 26, 46, 0.7);
+  background: var(--card-bg);
   border: 1px solid rgba(30, 41, 59, 0.8);
   border-top: 3px solid var(--c);
   border-radius: 14px;
@@ -142,7 +154,7 @@ main {
   transform: translateY(-6px);
   border-color: var(--c);
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(var(--c), 0.1);
-  background: rgba(17, 26, 46, 0.9);
+  background: var(--panel-bg-hover);
 }
 
 .ico {
@@ -202,7 +214,7 @@ footer {
   width: 100%;
   padding: 14px 16px;
   font-size: 15px;
-  background: rgba(17, 26, 46, 0.7);
+  background: var(--panel-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   color: var(--text);
@@ -228,7 +240,7 @@ footer {
 .filter-range {
   padding: 10px 12px;
   font-size: 13px;
-  background: rgba(17, 26, 46, 0.7);
+  background: var(--panel-bg);
   border: 1px solid var(--border);
   border-radius: 8px;
   color: var(--text);
@@ -330,7 +342,7 @@ footer {
 }
 
 .panel {
-  background: rgba(17, 26, 46, 0.6);
+  background: var(--panel-bg);
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 28px;
@@ -340,8 +352,8 @@ footer {
 }
 
 .panel:hover {
-  border-color: rgba(30, 41, 59, 1);
-  background: rgba(17, 26, 46, 0.8);
+  border-color: var(--border);
+  background: var(--panel-bg-hover);
 }
 
 .panel h2 {
@@ -363,7 +375,7 @@ footer {
 .row select {
   flex: 1;
   min-width: 160px;
-  background: rgba(10, 14, 39, 0.8);
+  background: var(--input-bg);
   border: 1px solid var(--border);
   color: var(--text);
   padding: 12px 14px;
@@ -378,7 +390,7 @@ footer {
   outline: none;
   border-color: var(--c);
   box-shadow: 0 0 0 3px rgba(var(--c), 0.1);
-  background: rgba(10, 14, 39, 1);
+  background: var(--panel-bg-hover);
 }
 
 .row button {
@@ -490,7 +502,7 @@ ul.services li:hover {
 }
 
 .lead {
-  background: rgba(10, 14, 39, 0.8);
+  background: var(--input-bg);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 16px;
@@ -501,7 +513,7 @@ ul.services li:hover {
 .lead:hover {
   border-color: var(--c);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 20px rgba(var(--c), 0.05);
-  background: rgba(10, 14, 39, 1);
+  background: var(--panel-bg);
 }
 
 .lead h3 {
@@ -626,10 +638,14 @@ ul.services li:hover {
 }
 
 @media (prefers-color-scheme: light) {
-  :root {
+  :root:not(.dark-mode) {
     --bg: #f8fafc;
     --bg-secondary: #f1f5f9;
     --panel: #ffffff;
+    --panel-bg: rgba(255, 255, 255, 0.95);
+    --panel-bg-hover: rgba(255, 255, 255, 1);
+    --input-bg: rgba(241, 245, 249, 0.9);
+    --card-bg: rgba(255, 255, 255, 0.9);
     --text: #0f172a;
     --text-muted: #64748b;
     --border: #e2e8f0;
