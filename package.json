@@ -1,0 +1,26 @@
+{
+  "name": "radares-profesion",
+  "version": "2.0.0",
+  "description": "22 radares especializados por profesión con diseño moderno",
+  "scripts": {
+    "start": "node serve.js",
+    "dev": "node serve.js",
+    "generate": "node generate.js",
+    "watch": "node generate.js --watch",
+    "test": "node test.js",
+    "validate": "node validate.js",
+    "screenshot": "node screenshot.js"
+  },
+  "keywords": [
+    "radares",
+    "profesiones",
+    "leads",
+    "CRM",
+    "inmobiliario"
+  ],
+  "author": "Inmoworking Pro",
+  "license": "MIT",
+  "devDependencies": {
+    "puppeteer": "^22.15.0"
+  }
+}
