@@ -1,10 +1,25 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import searchService from './services/searchService.js';
 import { parseJwt, verifyToken } from './middleware/auth.js';
 
 dotenv.config();
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const USERS_FILE = path.join(__dirname, 'users.json');
+
+// Cargar usuarios
+let USERS = {};
+try {
+  USERS = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
+  console.log(`✓ Cargados ${Object.keys(USERS).length} usuarios`);
+} catch (e) {
+  console.warn('⚠️ No se pudo leer users.json, usando solo credenciales por env var');
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -32,7 +47,7 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-// Login endpoint (mock - token simple en base64)
+// Login endpoint - verifica contra users.json
 app.post('/auth/login', (req, res) => {
   const { email, password } = req.body;
 
@@ -41,21 +56,27 @@ app.post('/auth/login', (req, res) => {
     return res.status(400).json({ error: 'Email y contraseña requeridos' });
   }
 
-  // Verificar credenciales (en producción: BD + bcrypt)
-  // Por ahora: cualquier email + contraseña "nexoleads123"
-  const validPassword = process.env.LOGIN_PASSWORD || 'nexoleads123';
+  // Verificar credenciales contra users.json
+  const user = USERS[email];
 
-  if (password !== validPassword) {
+  if (!user || user.password !== password) {
     return res.status(401).json({ error: 'Credenciales inválidas' });
   }
 
   // Generar token simple (en producción: JWT con firma)
-  const token = Buffer.from(JSON.stringify({ email, loginTime: Date.now() })).toString('base64');
+  const token = Buffer.from(JSON.stringify({
+    email,
+    name: user.name,
+    loginTime: Date.now()
+  })).toString('base64');
 
   res.json({
     success: true,
     token,
-    user: { email },
+    user: {
+      email,
+      name: user.name
+    },
     expiresIn: 86400 // 24 horas
   });
 });
