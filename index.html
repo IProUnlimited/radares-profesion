@@ -32,7 +32,7 @@
 <header style="display:flex;justify-content:space-between;align-items:center">
   <div>
     <h1>Nexo Leads</h1>
-    <p>30 radares especializados · Búsqueda de leads por profesión</p>
+    <p>30 radares agrupados en 6 categorías · Conectado a CRM Propium</p>
   </div>
   <div style="display:flex;gap:12px;align-items:center;height:fit-content">
     <a href="tracker.html" style="text-decoration:none;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.4);padding:8px 16px;border-radius:8px;color:var(--accent);font-weight:600;font-size:13px">📋 Tracker</a>
@@ -139,7 +139,7 @@
     <a class="card" href="radar-trabajos_verticales.html" style="--c:#dc2626" data-key="trabajos_verticales" data-category="Construcción & Reforma">
       <div class="ico">🪢</div>
       <div class="lbl">Trabajos Verticales</div>
-      <div class="sub">×1.5 · directorios públicos</div>
+      <div class="sub">×1.5 · 2 fuentes</div>
     </a>
     <a class="card" href="radar-carpinteria.html" style="--c:#a16207" data-key="carpinteria" data-category="Construcción & Reforma">
       <div class="ico">🪚</div>
@@ -234,10 +234,39 @@
     <p>❌ No se encontraron radares con esos criterios</p>
   </div>
 </main>
-<footer style="border-top:1px solid var(--border);padding:16px 24px;margin-top:40px;display:flex;justify-content:space-between;align-items:center;gap:24px;font-size:13px;color:var(--text-muted)"><span>Inmoworking Pro · Radares Especializados</span><span style="display:flex;gap:16px"><a href="privacy.html" style="color:var(--accent);text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:var(--accent);text-decoration:none">Cookies</a></span></footer>
+<footer style="border-top:1px solid var(--border);padding:16px 24px;margin-top:40px;display:flex;justify-content:space-between;align-items:center;gap:24px;font-size:13px;color:var(--text-muted)"><span>Nexo Leads · Radares Especializados</span><span style="display:flex;gap:16px"><a href="privacy.html" style="color:var(--accent);text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:var(--accent);text-decoration:none">Cookies</a></span></footer>
 </div>
 <script>
-const PROFESSIONS = [{"key":"agente_inmobiliario","label":"Agente Inmobiliario","category":"Inmobiliario","icon":"🏠","color":"#0ea5e9","multiplier":1.7,"sources":["boe_subastas","borme_inmobiliarias","google_alerts_inmo"],"services":["Captación de inmuebles","Valoración y tasación","Intermediación compra-venta","Intermediación alquiler","Gestión de visitas","Negociación de precio","Asesoría hipotecaria básica","Acompañamiento a notaría"]},{"key":"gerente_inmobiliario","label":"Gerente Inmobiliario","category":"Inmobiliario","icon":"📈","color":"#1d4ed8","multiplier":1.7,"sources":["borme_inmobiliarias"],"services":["Dirección de equipo comercial","Estrategia de marketing","Análisis de mercado","Control financiero","Cumplimiento normativo","Gestión de CRM","Formación del equipo"]},{"key":"reformista","label":"Reformas Integrales","category":"Construcción & Reforma","icon":"🔨","color":"#f59e0b","multiplier":1.4,"sources":["google_alerts_reforma"],"services":["Consultoría inicial","Planificación y coordinación de gremios","Demolición y desescombro","Albañilería","Fontanería","Electricidad","Pintura","Carpintería","Suelos y alicatados","Pladur","Reformas de cocinas y baños","Reformas de locales y oficinas"]},{"key":"arquitecto","label":"Arquitecto","category":"Construcción & Reforma","icon":"📐","color":"#7c3aed","multiplier":1.4,"sources":[],"services":["Proyectos de obra nueva","Reformas y rehabilitación","Dirección de obra","Certificados energéticos","Cédulas de habitabilidad","Licencias urbanísticas","Project management"]},{"key":"abogado","label":"Bufete de Abogados","category":"Legal & Fiscal","icon":"⚖️","color":"#0f172a","multiplier":1.7,"sources":["boe_concursos","borme_disoluciones"],"services":["Asesoría legal preventiva","Redacción de contratos","Litigación civil/mercantil/laboral","Defensa penal","Derecho de sociedades","Concursal","Inmobiliario","Familia","Fiscal y tributario","Protección de datos"]},{"key":"asesor_financiero","label":"Asesor Financiero","category":"Legal & Fiscal","icon":"💼","color":"#059669","multiplier":1.4,"sources":["boe_subastas","borme_expansion"],"services":["Planificación financiera personal","Inversiones y carteras","Asesoramiento hipotecario","Fiscalidad de inversiones","Planes de pensiones","Reestructuración de deuda"]},{"key":"inversor","label":"Inversor Inmobiliario","category":"Inmobiliario","icon":"💰","color":"#16a34a","multiplier":1.6,"sources":["boe_subastas"],"services":["Búsqueda de oportunidades off-market","Análisis de rentabilidad","Subastas y embargos","Flipping y house flipping","Build-to-rent","Fondos inmobiliarios"]},{"key":"administrador_fincas","label":"Administrador de Fincas","category":"Inmobiliario","icon":"🏢","color":"#475569","multiplier":1.7,"sources":["borme_admin_changes"],"services":["Administración de comunidades","Convocatoria de juntas","Gestión contable","Seguros comunitarios","Reclamación de morosos","Mantenimiento de inmuebles"]},{"key":"decorador","label":"Decoración / Interiorismo","category":"Decoración & Tecnología","icon":"🎨","color":"#db2777","multiplier":1.4,"sources":["google_alerts_reforma"],"services":["Diseño de interiores","Home staging","Selección de mobiliario","Iluminación decorativa","Reformas estéticas","Asesoramiento de color y estilo"]},{"key":"trabajos_verticales","label":"Trabajos Verticales","category":"Construcción & Reforma","icon":"🪢","color":"#dc2626","multiplier":1.5,"sources":[],"services":["Limpieza de fachadas","Reparación de fachadas","Pintura exterior en altura","Sellado de grietas","Rehabilitación de cornisas","Bajantes y canalones","Tejados y cubiertas","Impermeabilización de terrazas","Líneas de vida","Inspección de estructuras","Limpieza de cristales en altura","Control de aves","Mantenimiento de aerogeneradores"]},{"key":"inteligencia_artificial","label":"Inteligencia Artificial","category":"Decoración & Tecnología","icon":"🤖","color":"#2563eb","multiplier":1.3,"sources":["borme_empresas_digital"],"services":["Consultoría de IA","Auditoría de procesos","Desarrollo a medida","Integración con sistemas existentes","Chatbots y asistentes","RPA y automatizaciones","Análisis predictivo","NLP y visión por computador","Generación automática de informes"]},{"key":"gestor","label":"Gestoría","category":"Legal & Fiscal","icon":"📋","color":"#0891b2","multiplier":1.5,"sources":["borme_pymes_nuevas"],"services":["Altas de autónomos","Constitución de sociedades","Contabilidad","Impuestos trimestrales y anuales","Nóminas y Seguridad Social","Trámites con administraciones"]},{"key":"notario","label":"Notaría","category":"Inmobiliario","icon":"📜","color":"#92400e","multiplier":1.5,"sources":["boe_herencias"],"services":["Escrituras de compraventa","Hipotecas","Testamentos y herencias","Poderes notariales","Constitución de sociedades","Actas notariales"]},{"key":"propietario","label":"Propietario","category":"Inmobiliario","icon":"🔑","color":"#9333ea","multiplier":1.5,"sources":[],"services":["Venta de inmueble propio","Alquiler de inmueble propio","Gestión patrimonial","Optimización fiscal","Búsqueda de inquilinos solventes"]},{"key":"promotor","label":"Promotor Inmobiliario","category":"Inmobiliario","icon":"🏗️","color":"#ea580c","multiplier":1.7,"sources":[],"services":["Búsqueda de suelo","Estudios de viabilidad","Gestión urbanística","Dirección de promociones","Comercialización en plano","Postventa"]},{"key":"aseguradora","label":"Correduría de Seguros","category":"Servicios Especializados","icon":"🛡️","color":"#0d9488","multiplier":1.4,"sources":["borme_nuevas_empresas"],"services":["Seguros de hogar","Vida y salud","Comunidades","Comercio y empresas","Responsabilidad civil","Decenal y todo riesgo construcción"]},{"key":"carpinteria","label":"Carpintería","category":"Construcción & Reforma","icon":"🪚","color":"#a16207","multiplier":1.3,"sources":[],"services":["Carpintería de madera a medida","Puertas y armarios","Tarimas y suelos","Carpintería de aluminio y PVC","Ventanas","Mamparas","Vestidores"]},{"key":"limpieza","label":"Empresa de Limpieza","category":"Servicios Especializados","icon":"🧹","color":"#06b6d4","multiplier":1.2,"sources":["borme_empresas_servicios"],"services":["Limpieza de oficinas","Comunidades de vecinos","Hoteles y hostelería","Limpieza fin de obra","Cristales","Mantenimiento integral"]},{"key":"mudanzas","label":"Mudanzas","category":"Servicios Especializados","icon":"📦","color":"#be185d","multiplier":1.3,"sources":["borme_cambios_domicilio"],"services":["Mudanzas locales","Mudanzas nacionales","Mudanzas internacionales","Embalaje profesional","Guardamuebles","Mudanzas de oficinas","Transporte de pianos y obras de arte"]},{"key":"telecomunicaciones","label":"Telecomunicaciones","category":"Decoración & Tecnología","icon":"📡","color":"#4338ca","multiplier":1.2,"sources":[],"services":["Fibra óptica","Antenas y cabeceras","Telefonía empresarial","Centralitas IP","Cableado estructurado","Wifi profesional"]},{"key":"proveedor_exterior","label":"Pintura y Fachadas","category":"Construcción & Reforma","icon":"🖌️","color":"#65a30d","multiplier":1.3,"sources":[],"services":["Pintura de fachadas","Revestimientos exteriores","Aislamiento térmico SATE","Rehabilitación energética","Limpieza y tratamiento de muros"]},{"key":"servicios_basicos","label":"Servicios Básicos","category":"Servicios Básicos","icon":"🔧","color":"#6b7280","multiplier":1,"sources":["borme_cambios_domicilio"],"services":["Cerrajería 24h","Pequeñas reparaciones","Mantenimiento del hogar","Servicios urgentes","Manitas profesional"]},{"key":"fontaneria","label":"Fontanería","category":"Construcción & Reforma","icon":"🚰","color":"#0369a1","multiplier":1.3,"sources":[],"services":["Instalación de tuberías","Reparación de fugas","Desatranques","Calefacción","Agua caliente sanitaria","Bombas de agua","Mantenimiento preventivo"]},{"key":"electricista","label":"Electricista","category":"Construcción & Reforma","icon":"⚡","color":"#eab308","multiplier":1.3,"sources":[],"services":["Instalaciones eléctricas","Reparación de averías","Cuadros eléctricos","Iluminación","Sistemas de seguridad","Puestas a tierra","Certificados eléctricos"]},{"key":"jardineria","label":"Jardinería y Paisajismo","category":"Servicios Especializados","icon":"🌿","color":"#22c55e","multiplier":1.2,"sources":[],"services":["Diseño de jardines","Instalación de césped","Podas y mantenimiento","Riego automatizado","Árboles ornamentales","Plantas de interior","Trabajos de paisajismo"]},{"key":"veterinario","label":"Clínica Veterinaria","category":"Servicios Especializados","icon":"🐾","color":"#ec4899","multiplier":1.2,"sources":[],"services":["Consultas generales","Cirugías","Análisis y laboratorio","Odontología veterinaria","Vacunaciones","Urgencias 24h","Peluquería canina"]},{"key":"consultor_rh","label":"Consultoría de Recursos Humanos","category":"Legal & Fiscal","icon":"👥","color":"#8b5cf6","multiplier":1.4,"sources":[],"services":["Selección de personal","Formación corporativa","Asesoramiento laboral","Evaluación de competencias","Asesoramiento en conflictos laborales","Outsourcing de RRHH","Cultura organizacional"]},{"key":"peluqueria","label":"Peluquería","category":"Servicios Especializados","icon":"💇","color":"#f97316","multiplier":1.1,"sources":[],"services":["Cortes de pelo","Tintes y coloración","Tratamientos capilares","Peinados especiales","Asesoramiento de imagen","Servicios a domicilio","Barbería"]},{"key":"logistica","label":"Logística y Transporte","category":"Servicios Especializados","icon":"🚚","color":"#06b6d4","multiplier":1.3,"sources":[],"services":["Transporte de mercancías","Almacenamiento","Distribución","Aduanas y documentación","Seguimiento en tiempo real","Gestión de inventarios","Transporte especializado"]},{"key":"consultor_ambiental","label":"Consultoría Ambiental","category":"Legal & Fiscal","icon":"♻️","color":"#16a34a","multiplier":1.3,"sources":[],"services":["Auditorías ambientales","Estudios de impacto ambiental","Gestión de residuos","Sistemas de certificación","Cumplimiento normativo ambiental","Asesoramiento en sostenibilidad","Informes ambientales"]}];
+// ─── Authentication ───────────────────────────────────────────────
+const API_BASE = 'https://crm-agente-api.onrender.com';
+function getToken() { return localStorage.getItem('iwp_token') || ''; }
+function setToken(v) { localStorage.setItem('iwp_token', v); }
+function clearToken() { localStorage.removeItem('iwp_token'); document.getElementById('loginPanel').style.display = 'flex'; document.getElementById('appContent').style.display = 'none'; }
+
+const loginForm = document.getElementById('loginForm');
+const loginError = document.getElementById('loginError');
+const loginPanel = document.getElementById('loginPanel');
+const appContent = document.getElementById('appContent');
+const logoutBtn = document.getElementById('logoutBtn');
+
+if(getToken()) { loginPanel.style.display = 'none'; appContent.style.display = 'block'; }
+
+loginForm.onsubmit = async(e) => {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  loginError.style.display = 'none';
+  try {
+    const r = await fetch(API_BASE + '/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email, password}) });
+    const data = await r.json();
+    if(r.ok && data.token) { setToken(data.token); loginPanel.style.display = 'none'; appContent.style.display = 'block'; }
+    else { loginError.textContent = data.error || 'Credenciales inválidas'; loginError.style.display = 'block'; }
+  } catch(err) { loginError.textContent = 'Error: ' + err.message; loginError.style.display = 'block'; }
+};
+logoutBtn.onclick = clearToken;
+
+// ─── Search & Filters ─────────────────────────────────────────────
+const PROFESSIONS = [{"key":"agente_inmobiliario","label":"Agente Inmobiliario","category":"Inmobiliario","icon":"🏠","color":"#0ea5e9","multiplier":1.7,"sources":["boe_subastas","borme_inmobiliarias","google_alerts_inmo"],"services":["Captación de inmuebles","Valoración y tasación","Intermediación compra-venta","Intermediación alquiler","Gestión de visitas","Negociación de precio","Asesoría hipotecaria básica","Acompañamiento a notaría"]},{"key":"gerente_inmobiliario","label":"Gerente Inmobiliario","category":"Inmobiliario","icon":"📈","color":"#1d4ed8","multiplier":1.7,"sources":["borme_inmobiliarias"],"services":["Dirección de equipo comercial","Estrategia de marketing","Análisis de mercado","Control financiero","Cumplimiento normativo","Gestión de CRM","Formación del equipo"]},{"key":"reformista","label":"Reformas Integrales","category":"Construcción & Reforma","icon":"🔨","color":"#f59e0b","multiplier":1.4,"sources":["google_alerts_reforma"],"services":["Consultoría inicial","Planificación y coordinación de gremios","Demolición y desescombro","Albañilería","Fontanería","Electricidad","Pintura","Carpintería","Suelos y alicatados","Pladur","Reformas de cocinas y baños","Reformas de locales y oficinas"]},{"key":"arquitecto","label":"Arquitecto","category":"Construcción & Reforma","icon":"📐","color":"#7c3aed","multiplier":1.4,"sources":[],"services":["Proyectos de obra nueva","Reformas y rehabilitación","Dirección de obra","Certificados energéticos","Cédulas de habitabilidad","Licencias urbanísticas","Project management"]},{"key":"abogado","label":"Bufete de Abogados","category":"Legal & Fiscal","icon":"⚖️","color":"#0f172a","multiplier":1.7,"sources":["boe_concursos","borme_disoluciones"],"services":["Asesoría legal preventiva","Redacción de contratos","Litigación civil/mercantil/laboral","Defensa penal","Derecho de sociedades","Concursal","Inmobiliario","Familia","Fiscal y tributario","Protección de datos"]},{"key":"asesor_financiero","label":"Asesor Financiero","category":"Legal & Fiscal","icon":"💼","color":"#059669","multiplier":1.4,"sources":["boe_subastas","borme_expansion"],"services":["Planificación financiera personal","Inversiones y carteras","Asesoramiento hipotecario","Fiscalidad de inversiones","Planes de pensiones","Reestructuración de deuda"]},{"key":"inversor","label":"Inversor Inmobiliario","category":"Inmobiliario","icon":"💰","color":"#16a34a","multiplier":1.6,"sources":["boe_subastas"],"services":["Búsqueda de oportunidades off-market","Análisis de rentabilidad","Subastas y embargos","Flipping y house flipping","Build-to-rent","Fondos inmobiliarios"]},{"key":"administrador_fincas","label":"Administrador de Fincas","category":"Inmobiliario","icon":"🏢","color":"#475569","multiplier":1.7,"sources":["borme_admin_changes"],"services":["Administración de comunidades","Convocatoria de juntas","Gestión contable","Seguros comunitarios","Reclamación de morosos","Mantenimiento de inmuebles"]},{"key":"decorador","label":"Decoración / Interiorismo","category":"Decoración & Tecnología","icon":"🎨","color":"#db2777","multiplier":1.4,"sources":["google_alerts_reforma"],"services":["Diseño de interiores","Home staging","Selección de mobiliario","Iluminación decorativa","Reformas estéticas","Asesoramiento de color y estilo"]},{"key":"trabajos_verticales","label":"Trabajos Verticales","category":"Construcción & Reforma","icon":"🪢","color":"#dc2626","multiplier":1.5,"sources":["google_alerts_reforma","borme_empresas_servicios"],"services":["Limpieza de fachadas","Reparación de fachadas","Pintura exterior en altura","Sellado de grietas","Rehabilitación de cornisas","Bajantes y canalones","Tejados y cubiertas","Impermeabilización de terrazas","Líneas de vida","Inspección de estructuras","Limpieza de cristales en altura","Control de aves","Mantenimiento de aerogeneradores"]},{"key":"inteligencia_artificial","label":"Inteligencia Artificial","category":"Decoración & Tecnología","icon":"🤖","color":"#2563eb","multiplier":1.3,"sources":["borme_empresas_digital"],"services":["Consultoría de IA","Auditoría de procesos","Desarrollo a medida","Integración con sistemas existentes","Chatbots y asistentes","RPA y automatizaciones","Análisis predictivo","NLP y visión por computador","Generación automática de informes"]},{"key":"gestor","label":"Gestoría","category":"Legal & Fiscal","icon":"📋","color":"#0891b2","multiplier":1.5,"sources":["borme_pymes_nuevas"],"services":["Altas de autónomos","Constitución de sociedades","Contabilidad","Impuestos trimestrales y anuales","Nóminas y Seguridad Social","Trámites con administraciones"]},{"key":"notario","label":"Notaría","category":"Inmobiliario","icon":"📜","color":"#92400e","multiplier":1.5,"sources":["boe_herencias"],"services":["Escrituras de compraventa","Hipotecas","Testamentos y herencias","Poderes notariales","Constitución de sociedades","Actas notariales"]},{"key":"propietario","label":"Propietario","category":"Inmobiliario","icon":"🔑","color":"#9333ea","multiplier":1.5,"sources":[],"services":["Venta de inmueble propio","Alquiler de inmueble propio","Gestión patrimonial","Optimización fiscal","Búsqueda de inquilinos solventes"]},{"key":"promotor","label":"Promotor Inmobiliario","category":"Inmobiliario","icon":"🏗️","color":"#ea580c","multiplier":1.7,"sources":[],"services":["Búsqueda de suelo","Estudios de viabilidad","Gestión urbanística","Dirección de promociones","Comercialización en plano","Postventa"]},{"key":"aseguradora","label":"Correduría de Seguros","category":"Servicios Especializados","icon":"🛡️","color":"#0d9488","multiplier":1.4,"sources":["borme_nuevas_empresas"],"services":["Seguros de hogar","Vida y salud","Comunidades","Comercio y empresas","Responsabilidad civil","Decenal y todo riesgo construcción"]},{"key":"carpinteria","label":"Carpintería","category":"Construcción & Reforma","icon":"🪚","color":"#a16207","multiplier":1.3,"sources":[],"services":["Carpintería de madera a medida","Puertas y armarios","Tarimas y suelos","Carpintería de aluminio y PVC","Ventanas","Mamparas","Vestidores"]},{"key":"limpieza","label":"Empresa de Limpieza","category":"Servicios Especializados","icon":"🧹","color":"#06b6d4","multiplier":1.2,"sources":["borme_empresas_servicios"],"services":["Limpieza de oficinas","Comunidades de vecinos","Hoteles y hostelería","Limpieza fin de obra","Cristales","Mantenimiento integral"]},{"key":"mudanzas","label":"Mudanzas","category":"Servicios Especializados","icon":"📦","color":"#be185d","multiplier":1.3,"sources":["borme_cambios_domicilio"],"services":["Mudanzas locales","Mudanzas nacionales","Mudanzas internacionales","Embalaje profesional","Guardamuebles","Mudanzas de oficinas","Transporte de pianos y obras de arte"]},{"key":"telecomunicaciones","label":"Telecomunicaciones","category":"Decoración & Tecnología","icon":"📡","color":"#4338ca","multiplier":1.2,"sources":[],"services":["Fibra óptica","Antenas y cabeceras","Telefonía empresarial","Centralitas IP","Cableado estructurado","Wifi profesional"]},{"key":"proveedor_exterior","label":"Pintura y Fachadas","category":"Construcción & Reforma","icon":"🖌️","color":"#65a30d","multiplier":1.3,"sources":[],"services":["Pintura de fachadas","Revestimientos exteriores","Aislamiento térmico SATE","Rehabilitación energética","Limpieza y tratamiento de muros"]},{"key":"servicios_basicos","label":"Servicios Básicos","category":"Servicios Básicos","icon":"🔧","color":"#6b7280","multiplier":1,"sources":["borme_cambios_domicilio"],"services":["Cerrajería 24h","Pequeñas reparaciones","Mantenimiento del hogar","Servicios urgentes","Manitas profesional"]},{"key":"fontaneria","label":"Fontanería","category":"Construcción & Reforma","icon":"🚰","color":"#0369a1","multiplier":1.3,"sources":[],"services":["Instalación de tuberías","Reparación de fugas","Desatranques","Calefacción","Agua caliente sanitaria","Bombas de agua","Mantenimiento preventivo"]},{"key":"electricista","label":"Electricista","category":"Construcción & Reforma","icon":"⚡","color":"#eab308","multiplier":1.3,"sources":[],"services":["Instalaciones eléctricas","Reparación de averías","Cuadros eléctricos","Iluminación","Sistemas de seguridad","Puestas a tierra","Certificados eléctricos"]},{"key":"jardineria","label":"Jardinería y Paisajismo","category":"Servicios Especializados","icon":"🌿","color":"#22c55e","multiplier":1.2,"sources":[],"services":["Diseño de jardines","Instalación de césped","Podas y mantenimiento","Riego automatizado","Árboles ornamentales","Plantas de interior","Trabajos de paisajismo"]},{"key":"veterinario","label":"Clínica Veterinaria","category":"Servicios Especializados","icon":"🐾","color":"#ec4899","multiplier":1.2,"sources":[],"services":["Consultas generales","Cirugías","Análisis y laboratorio","Odontología veterinaria","Vacunaciones","Urgencias 24h","Peluquería canina"]},{"key":"consultor_rh","label":"Consultoría de Recursos Humanos","category":"Legal & Fiscal","icon":"👥","color":"#8b5cf6","multiplier":1.4,"sources":[],"services":["Selección de personal","Formación corporativa","Asesoramiento laboral","Evaluación de competencias","Asesoramiento en conflictos laborales","Outsourcing de RRHH","Cultura organizacional"]},{"key":"peluqueria","label":"Peluquería","category":"Servicios Especializados","icon":"💇","color":"#f97316","multiplier":1.1,"sources":[],"services":["Cortes de pelo","Tintes y coloración","Tratamientos capilares","Peinados especiales","Asesoramiento de imagen","Servicios a domicilio","Barbería"]},{"key":"logistica","label":"Logística y Transporte","category":"Servicios Especializados","icon":"🚚","color":"#06b6d4","multiplier":1.3,"sources":[],"services":["Transporte de mercancías","Almacenamiento","Distribución","Aduanas y documentación","Seguimiento en tiempo real","Gestión de inventarios","Transporte especializado"]},{"key":"consultor_ambiental","label":"Consultoría Ambiental","category":"Legal & Fiscal","icon":"♻️","color":"#16a34a","multiplier":1.3,"sources":[],"services":["Auditorías ambientales","Estudios de impacto ambiental","Gestión de residuos","Sistemas de certificación","Cumplimiento normativo ambiental","Asesoramiento en sostenibilidad","Informes ambientales"]}];
 const searchInput = document.getElementById('searchInput');
 const categoryFilter = document.getElementById('categoryFilter');
 const multiplierFilter = document.getElementById('multiplierFilter');
@@ -325,86 +354,5 @@ themeToggle.addEventListener('click', () => {
   updateThemeButton();
 });
 updateThemeButton();
-
-// ─── AUTH SYSTEM ───
-const API_BASE = "https://crm-agente-api.onrender.com";
-const loginPanel = document.getElementById('loginPanel');
-const appContent = document.getElementById('appContent');
-const loginForm = document.getElementById('loginForm');
-const loginEmail = document.getElementById('loginEmail');
-const loginPassword = document.getElementById('loginPassword');
-const loginError = document.getElementById('loginError');
-const logoutBtn = document.getElementById('logoutBtn');
-
-function checkAuth() {
-  const token = localStorage.getItem('iwp_token');
-  if (token) {
-    loginPanel.style.display = 'none';
-    appContent.style.display = 'block';
-  } else {
-    loginPanel.style.display = 'flex';
-    appContent.style.display = 'none';
-  }
-}
-
-async function doLogin(e) {
-  e.preventDefault();
-  const email = loginEmail.value.trim();
-  const password = loginPassword.value;
-
-  if (!email || !password) {
-    loginError.textContent = 'Email y contraseña son obligatorios';
-    loginError.style.display = 'block';
-    return;
-  }
-
-  loginError.style.display = 'none';
-  const btn = loginForm.querySelector('button[type="submit"]');
-  btn.textContent = '⏳ Conectando...';
-  btn.disabled = true;
-
-  try {
-    const res = await fetch(API_BASE + '/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.error || 'Error al iniciar sesión');
-    }
-
-    if (data.token) {
-      localStorage.setItem('iwp_token', data.token);
-      localStorage.setItem('iwp_email', email);
-      loginPanel.style.display = 'none';
-      appContent.style.display = 'block';
-      loginForm.reset();
-    } else {
-      throw new Error('No se recibió token');
-    }
-  } catch (err) {
-    loginError.textContent = err.message || 'Error de conexión';
-    loginError.style.display = 'block';
-  } finally {
-    btn.textContent = 'Iniciar sesión';
-    btn.disabled = false;
-  }
-}
-
-function doLogout() {
-  localStorage.removeItem('iwp_token');
-  localStorage.removeItem('iwp_email');
-  checkAuth();
-  loginEmail.focus();
-}
-
-loginForm.addEventListener('submit', doLogin);
-logoutBtn.addEventListener('click', doLogout);
-
-// Check auth on page load
-checkAuth();
 </script>
 </body></html>
