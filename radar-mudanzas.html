@@ -182,47 +182,147 @@ document.getElementById('csvBtn').addEventListener('click', () => {
 });
 updateHistory();
 
+function extractLeadFields(l){
+  const raw = l.raw_data || {};
+  return {
+    name: l.name || raw.name || '(sin nombre)',
+    phone: l.phone || raw.phone || raw.telephone || raw.international_phone_number || '',
+    email: l.email || raw.email || '',
+    website: l.website || raw.website || raw.url || raw.site || '',
+    city: l.city || raw.city || raw.locality || '',
+    address: raw.address || raw.formatted_address || raw.vicinity || '',
+    rating: raw.rating || '',
+    reviews_count: raw.user_ratings_total || raw.reviews_count || '',
+    score: raw.priority_score || l.priority_score || '',
+    notes: l.notes || raw.notes || ''
+  };
+}
+function makeLeadId(f){
+  return btoa(unescape(encodeURIComponent(PROFESSION + '|' + f.name + '|' + f.phone))).replace(/[=+/]/g,'_');
+}
+window.currentLeads = {};
 function render(data){
-  const leads = data.leads || [];
-  if(!leads.length){ out.innerHTML = '<div class="empty">No se encontraron leads'+(data.message ? ': '+escapeH(data.message) : '')+'</div>'; return; }
-  out.innerHTML = leads.map((l, i) => {
-    const raw = l.raw_data || {};
-    const score = raw.priority_score || l.priority_score || '';
-    const email = l.email || '';
-    const phone = l.phone || '';
-    const name = l.name || '(sin nombre)';
-    const city = raw.city || '';
-    return '<div class="lead" style="animation-delay:'+(i*50)+'ms">'
-      +'<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">'
-      +'<div style="flex:1"><h3 style="margin:0">'+escapeH(name)+(score?'<span class="score">'+score+'</span>':'')+'</h3></div>'
-      +'<button class="fav-btn" data-email="'+escapeH(email)+'" data-phone="'+escapeH(phone)+'" data-name="'+escapeH(name)+'" data-city="'+escapeH(city)+'" style="background:none;border:none;font-size:18px;cursor:pointer;padding:0;flex-shrink:0">☆</button>'
+  const allLeads = data.leads || [];
+  const withPhone = allLeads.filter(l => { const f = extractLeadFields(l); return !!f.phone; });
+  const skipped = allLeads.length - withPhone.length;
+  if(!withPhone.length){
+    out.innerHTML = '<div class="empty">No se encontraron leads con teléfono'+(skipped?' ('+skipped+' descartados sin teléfono)':'')+(data.message ? '<br><span style="font-size:12px">'+escapeH(data.message)+'</span>' : '')+'</div>';
+    return;
+  }
+  window.currentLeads = {};
+  const header = skipped ? '<div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">📊 '+withPhone.length+' leads con teléfono ('+skipped+' sin teléfono descartados)</div>' : '';
+  out.innerHTML = header + withPhone.map((l, i) => {
+    const f = extractLeadFields(l);
+    const id = makeLeadId(f);
+    window.currentLeads[id] = { raw: l, fields: f };
+    const isPremium = f.email && f.website;
+    return '<div class="lead" data-lead-id="'+id+'" style="animation-delay:'+(i*50)+'ms">'
+      +'<div class="lead-header" style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;cursor:pointer">'
+      +'<div style="flex:1">'
+      +'<h3 style="margin:0">'
+      + (isPremium?'<span title="Lead premium (web+email)" style="margin-right:6px">⭐</span>':'')
+      + escapeH(f.name)
+      + (f.score?'<span class="score">'+f.score+'</span>':'')
+      + (f.rating?'<span style="margin-left:8px;font-size:12px;color:#f59e0b">★ '+f.rating+(f.reviews_count?' ('+f.reviews_count+')':'')+'</span>':'')
+      +'</h3>'
       +'</div>'
-      +'<div class="l-meta">'
-      + (phone?'<span class="copyable" style="cursor:pointer;border-bottom:1px dashed #666;padding:0 2px" title="Click para copiar">📞 '+escapeH(phone)+'</span> · ':'')
-      + (email?'<span class="copyable" style="cursor:pointer;border-bottom:1px dashed #666;padding:0 2px" title="Click para copiar">✉ '+escapeH(email)+'</span> · ':'')
-      + (city?'📍 '+escapeH(city):'')
-      + '</div>'
-      + (l.notes?'<div class="l-meta" style="margin-top:6px">'+escapeH(l.notes)+'</div>':'')
+      +'<span class="lead-toggle" style="font-size:14px;color:var(--text-muted);user-select:none">▼</span>'
+      +'</div>'
+      +'<div class="l-meta" style="margin-top:6px">'
+      + '<span class="copyable" data-copy="'+escapeH(f.phone)+'" style="cursor:pointer;border-bottom:1px dashed #666;padding:0 2px" title="Click para copiar">📞 '+escapeH(f.phone)+'</span>'
+      + (f.email?' · <span class="copyable" data-copy="'+escapeH(f.email)+'" style="cursor:pointer;border-bottom:1px dashed #666;padding:0 2px" title="Click para copiar">✉ '+escapeH(f.email)+'</span>':'')
+      + (f.website?' · <a href="'+escapeH(f.website)+'" target="_blank" rel="noopener" style="color:var(--c);text-decoration:none" onclick="event.stopPropagation()">🌐 Web</a>':'')
+      + (f.city?' · 📍 '+escapeH(f.city):'')
+      +'</div>'
+      +'<div class="lead-details" style="display:none;margin-top:12px;padding-top:12px;border-top:1px dashed var(--border)">'
+      + (f.address?'<div style="margin-bottom:8px;font-size:13px"><b>Dirección:</b> '+escapeH(f.address)+'</div>':'')
+      + (f.notes?'<div style="margin-bottom:8px;font-size:13px"><b>Notas:</b> '+escapeH(f.notes)+'</div>':'')
+      +'<details style="margin:10px 0"><summary style="cursor:pointer;font-size:12px;color:var(--text-muted)">Ver datos crudos del backend</summary>'
+      +'<pre style="background:var(--input-bg);padding:10px;border-radius:6px;font-size:11px;overflow-x:auto;max-height:240px;margin-top:6px">'+escapeH(JSON.stringify(l,null,2))+'</pre>'
+      +'</details>'
+      +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">'
+      +'<button class="track-btn" data-lead-id="'+id+'" style="background:var(--c);border:0;color:white;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600">💾 Guardar en tracker</button>'
+      +'<button class="open-lead" data-lead-id="'+id+'" style="background:var(--input-bg);border:1px solid var(--border);color:var(--text);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px">📋 Ver ficha completa</button>'
+      +'<button class="fav-btn" data-lead-id="'+id+'" style="background:var(--input-bg);border:1px solid var(--border);color:var(--text);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px">☆ Favorito</button>'
+      +'</div>'
+      +'</div>'
       +'</div>';
   }).join('');
   setupRadarListeners();
 }
+function saveToTracker(id){
+  const data = window.currentLeads[id];
+  if(!data) return null;
+  const f = data.fields;
+  const tracker = JSON.parse(localStorage.getItem('iwp_tracker')||'{}');
+  if(!tracker[id]){
+    tracker[id] = {
+      id: id,
+      profession: PROFESSION,
+      professionLabel: document.title.replace(/^Radar /,'').replace(/ — IWPro$/,''),
+      name: f.name, phone: f.phone, email: f.email, website: f.website,
+      city: f.city, address: f.address, score: f.score,
+      rating: f.rating, reviews_count: f.reviews_count, notes: f.notes,
+      raw_data: data.raw.raw_data || {},
+      status: 'pendiente',
+      contact_date: '',
+      tracker_notes: '',
+      events: [{date:new Date().toISOString(),type:'added',note:'Añadido desde radar '+PROFESSION}],
+      added_at: new Date().toISOString()
+    };
+  } else {
+    tracker[id].events = tracker[id].events || [];
+    tracker[id].events.push({date:new Date().toISOString(),type:'reseen',note:'Re-visto en radar'});
+  }
+  localStorage.setItem('iwp_tracker', JSON.stringify(tracker));
+  return tracker[id];
+}
 function setupRadarListeners(){
-  document.querySelectorAll('.fav-btn').forEach(btn=>{
-    const key = btn.dataset.email + '|' + btn.dataset.phone;
-    const favs = JSON.parse(localStorage.getItem('iwp_favs')||'{}');
-    if(favs[key]) btn.textContent='⭐';
+  document.querySelectorAll('.lead-header').forEach(h=>{
+    h.addEventListener('click',e=>{
+      const lead = h.closest('.lead');
+      const det = lead.querySelector('.lead-details');
+      const tog = lead.querySelector('.lead-toggle');
+      const open = det.style.display !== 'none';
+      det.style.display = open ? 'none' : 'block';
+      tog.textContent = open ? '▼' : '▲';
+    });
+  });
+  document.querySelectorAll('.track-btn').forEach(btn=>{
+    const id = btn.dataset.leadId;
+    const tracker = JSON.parse(localStorage.getItem('iwp_tracker')||'{}');
+    if(tracker[id]) btn.textContent = '✓ En tracker';
     btn.addEventListener('click',e=>{
-      e.preventDefault();
+      e.stopPropagation();
+      saveToTracker(id);
+      btn.textContent = '✓ En tracker';
+      showToast('✓ Guardado en tracker');
+    });
+  });
+  document.querySelectorAll('.open-lead').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      const id = btn.dataset.leadId;
+      saveToTracker(id);
+      window.open('lead.html?id='+id, '_blank');
+    });
+  });
+  document.querySelectorAll('.fav-btn').forEach(btn=>{
+    const id = btn.dataset.leadId;
+    const favs = JSON.parse(localStorage.getItem('iwp_favs')||'{}');
+    if(favs[id]) btn.textContent='⭐ Favorito';
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
       const favs = JSON.parse(localStorage.getItem('iwp_favs')||'{}');
-      if(favs[key]){ delete favs[key]; btn.textContent='☆'; showToast('✓ Eliminado de favoritos'); }
-      else{ favs[key]={email:btn.dataset.email,phone:btn.dataset.phone,name:btn.dataset.name,city:btn.dataset.city,prof:PROFESSION,date:new Date().toISOString()}; btn.textContent='⭐'; showToast('✓ Favorito guardado'); }
+      if(favs[id]){ delete favs[id]; btn.textContent='☆ Favorito'; showToast('✓ Eliminado de favoritos'); }
+      else{ const data = window.currentLeads[id]; if(data){ favs[id]={...data.fields,prof:PROFESSION,date:new Date().toISOString()}; btn.textContent='⭐ Favorito'; showToast('✓ Favorito guardado'); } }
       localStorage.setItem('iwp_favs', JSON.stringify(favs));
     });
   });
   document.querySelectorAll('.copyable').forEach(el=>{
     el.addEventListener('click',e=>{
-      const text = el.textContent.split(' ')[1];
+      e.stopPropagation();
+      const text = el.dataset.copy || el.textContent;
       navigator.clipboard.writeText(text).then(()=>showToast('✓ Copiado: '+text)).catch(()=>showToast('❌ Error'));
     });
   });

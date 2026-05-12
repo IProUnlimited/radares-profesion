@@ -13,7 +13,10 @@
       "Bash(git commit -m 'docs: agregar screenshots automáticos de radares \\(desktop + mobile\\) *)",
       "Bash(node validate.js)",
       "Bash(grep -n \"C:\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\Radares\" generate.js)",
-      "Bash(npm test *)"
+      "Bash(npm test *)",
+      "mcp__Claude_Preview__preview_start",
+      "mcp__Claude_in_Chrome__navigate",
+      "mcp__Claude_in_Chrome__computer"
     ]
   }
 }
