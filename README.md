@@ -1,26 +1,46 @@
 # Radares-Profesion 🎯
 
-**22 radares especializados por profesión** conectados al backend `crm-agente-api.onrender.com`. 
-Sitio 100% estático con diseño moderno, generado dinámicamente desde `professions.json`.
+**30 radares especializados por profesión** agrupados en 6 categorías, conectados al backend `crm-agente-api.onrender.com`. 
+Sitio 100% estático con diseño moderno, tracker de leads persistente, y sistema de validación robusto generado dinámicamente desde `professions.json`.
 
 ---
 
 ## 🚀 Desarrollo Local
 
-### Iniciar servidor
+### Instalar dependencias
 ```bash
-node serve.js
+npm install
+```
+
+### Iniciar servidor de desarrollo
+```bash
+npm start
 # Abre http://localhost:8080
 ```
 
 ### Regenerar radares (después de cambios en professions.json)
 ```bash
-node generate.js
+npm run generate
 ```
 
 ### Modo watch (regenera automáticamente)
 ```bash
-node generate.js --watch
+npm run watch
+```
+
+### Ejecutar tests
+```bash
+npm test
+```
+
+### Validar professions.json
+```bash
+npm run validate
+```
+
+### Generar screenshots automáticos
+```bash
+npm run screenshot
 ```
 
 ---
@@ -29,28 +49,51 @@ node generate.js --watch
 
 ```
 .
-├── generate.js              # Generador de HTMLs (incluye watch mode)
-├── serve.js                 # Servidor de desarrollo
-├── styles.css               # Estilos modernos (compartidos)
-├── professions.json         # Datos de profesiones (22 radares)
-├── index.html               # Página principal (auto-generada)
-└── radar-*.html             # 22 radares especializados (auto-generados)
+├── generate.js              # Generador de HTMLs + tracker (incluye watch mode)
+├── serve.js                 # Servidor estático con caching y GZIP
+├── validate.js              # Validador de schema para professions.json
+├── test.js                  # Tests unitarios e integración
+├── screenshot.js            # Generador automático de screenshots
+├── styles.css               # Estilos modernos responsive (compartidos)
+├── professions.json         # Datos de profesiones (30 radares en 6 categorías)
+├── index.html               # Página principal con categorías (auto-generada)
+├── tracker.html             # Panel de gestión de leads (auto-generada)
+├── lead.html                # Ficha de detalle de lead (auto-generada)
+├── .nojekyll                # Config GitHub Pages
+├── .github/workflows/       # CI/CD automation
+│   └── build-deploy.yml     # GitHub Actions workflow
+└── radar-*.html             # 30 radares especializados (auto-generados)
 ```
 
 ---
 
-## 🎨 Diseño
+## ✨ Características
 
-**Sistema moderno minimalista:**
+**Interfaz moderna:**
 - 📐 Tipografía sofisticada (Inter, system fonts)
 - 🌊 Gradientes lineales dinámicos por profesión
 - ✨ Animaciones sutiles (hover, transiciones fluidas)
-- 🎭 Efectos de reflex en cards
-- ♿ Accesibilidad WCAG AA+ (light mode + dark mode)
+- 🎭 Efectos visuales en cards
+- ♿ Accesibilidad WCAG AA+ (light mode + dark mode persistente)
 - 📱 Responsive (mobile, tablet, desktop)
 
-**Colores dinámicos:**
-Cada profesión tiene su propio color (`--c` variable CSS), aplicado a headers, botones y accents.
+**Funcionalidades:**
+- 🏘️ **6 categorías** de profesiones (Inmobiliario, Legal & Fiscal, Construcción, Servicios, Tecnología, Básicos)
+- 🔍 **Búsqueda por ciudad** con integración a CRM backend
+- 📋 **Tracker persistente** de leads con localStorage
+- ⭐ **Favoritos y notas** por lead
+- 📊 **Panel de estadísticas** con filtros por profesión y estado
+- 📥 **Exportación** a CSV y JSON
+- 💾 **Importación** de leads
+- 🌙 **Toggle dark/light mode** con persistencia
+- ✅ **Validación de datos** automática en build-time
+
+**Seguridad y Calidad:**
+- 🛡️ XSS protection (HTML escaping)
+- ✓ Tests automatizados (21 tests incluidos)
+- 🔄 CI/CD con GitHub Actions
+- 📦 Compresión GZIP automática
+- 🚀 Deploy automático a GitHub Pages
 
 ---
 
@@ -101,15 +144,28 @@ Sitio 100% estático (sin build step). Compatible con:
 Backend acepta: `localhost`, `*.pages.dev`, `*.vercel.app`, orígenes IWPro.
 Para agregar origen: edita `crm-agente-api/src/app.js`.
 
+### GitHub Pages (Automático con CI/CD)
+1. Push a rama `main` activa el workflow `.github/workflows/build-deploy.yml`
+2. Se valida `professions.json`, se generan radares, corren tests
+3. Se despliega automáticamente a GitHub Pages
+4. Sitio disponible en `https://tu-usuario.github.io/radares-profesion`
+
+**Para dominio personalizado:**
+1. Descomenta `cname: tu-dominio.com` en el workflow
+2. Configura DNS CNAME en tu registrador
+3. Habilita "Enforce HTTPS" en GitHub Pages settings
+
 ---
 
 ## 📊 Estadísticas
 
-- **22 radares** especializados
-- **~450 líneas CSS** (externo, compartido)
-- **~200 líneas JS** por radar (inline, autocontenido)
-- **~7 KB HTML promedio** por radar
-- **100% responsive**
+- **30 radares** especializados en 6 categorías
+- **~1000 líneas CSS** con dark/light mode y variables dinámicas
+- **~300 líneas JS** por radar (inline, autocontenido)
+- **~10 KB HTML promedio** por radar
+- **21 tests** automatizados (100% pass rate)
+- **100% responsive** (mobile, tablet, desktop)
+- **Validación de schema** en tiempo de build
 
 ---
 
@@ -123,11 +179,25 @@ Para agregar origen: edita `crm-agente-api/src/app.js`.
 
 ## 💡 Roadmap
 
-- [ ] Screenshot automático en CI/CD
-- [ ] Tests de validación para professions.json
-- [ ] Minificación CSS/JS
+### ✅ Completado (Fases 1-4)
+- [x] Validación de schema en professions.json
+- [x] Tests unitarios e integración (21 tests)
+- [x] Dark/light mode persistente
+- [x] Tracker de leads con localStorage
+- [x] Filtros y búsqueda avanzada
+- [x] Exportación CSV/JSON
+- [x] GitHub Pages setup con .nojekyll
+- [x] CI/CD GitHub Actions workflow
+
+### ⏳ Mejoras Futuras
+- [ ] Minificación CSS/JS (opcional)
+- [ ] Screenshot automático en CI/CD (en desarrollo)
 - [ ] Service worker para offline
 - [ ] Análisis de performance (Lighthouse)
+- [ ] Panel de administración para editar professions.json
+- [ ] Búsqueda multi-profesión
+- [ ] Estadísticas de leads por radar
+- [ ] Integración con Slack/Email para notificaciones
 
 ---
 

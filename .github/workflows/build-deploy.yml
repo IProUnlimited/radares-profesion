@@ -1,34 +1,42 @@
 name: Build & Deploy
+
 on:
   push:
     branches: [main, claude/**]
+  pull_request:
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Validate professions.json schema
-        run: node validate.js
+      - name: Validate professions.json
+        run: npm run validate
 
-      - name: Generate HTML files
-        run: node generate.js
+      - name: Generate radares
+        run: npm run generate
 
       - name: Run tests
         run: npm test
 
+      - name: Generate screenshots (optional)
+        run: npm run screenshot
+        continue-on-error: true
+
       - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/main' && success()
-        uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: .
-          force_orphan: true
+          # Optional: uncomment and set your domain
+          # cname: radares-profesion.dev
