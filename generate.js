@@ -152,7 +152,7 @@ function radarHtml(key, p) {
     <div id="results"><div class="empty">Pulsa "Generar leads" para empezar</div></div>
   </section>
 </main>
-<footer>Inmoworking Pro · Radar Especializado · ${htmlEscape(p.label)}</footer>
+<footer style="border-top:1px solid #333;padding:12px;margin-top:24px;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:12px;color:#94a3b8"><span>Inmoworking Pro · ${htmlEscape(p.label)}</span><span style="display:flex;gap:12px"><a href="privacy.html" style="color:#60a5fa;text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:#60a5fa;text-decoration:none">Cookies</a></span></footer>
 <script>
 const PROFESSION = ${JSON.stringify(key)};
 const API_BASE = ${JSON.stringify(API_BASE)};
@@ -511,7 +511,7 @@ function indexHtml(profs) {
     <p>❌ No se encontraron radares con esos criterios</p>
   </div>
 </main>
-<footer>Cada radar dispara las fuentes específicas de su profesión y aplica el multiplicador de score sectorial.</footer>
+<footer style="border-top:1px solid var(--border);padding:16px 24px;margin-top:40px;display:flex;justify-content:space-between;align-items:center;gap:24px;font-size:13px;color:var(--text-muted)"><span>Inmoworking Pro · Radares Especializados</span><span style="display:flex;gap:16px"><a href="privacy.html" style="color:var(--accent);text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:var(--accent);text-decoration:none">Cookies</a></span></footer>
 <script>
 const PROFESSIONS = ${JSON.stringify(profsData)};
 const searchInput = document.getElementById('searchInput');
@@ -684,6 +684,7 @@ function trackerHtml(profs) {
     </div>
   </section>
 </main>
+<footer style="border-top:1px solid var(--border);padding:16px 24px;margin-top:40px;display:flex;justify-content:space-between;align-items:center;gap:24px;font-size:13px;color:var(--text-muted)"><span>Inmoworking Pro · Radares Especializados</span><span style="display:flex;gap:16px"><a href="privacy.html" style="color:var(--accent);text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:var(--accent);text-decoration:none">Cookies</a></span></footer>
 <script>
 function getTracker(){ return JSON.parse(localStorage.getItem('iwp_tracker')||'{}'); }
 function saveTracker(t){ localStorage.setItem('iwp_tracker', JSON.stringify(t)); }
@@ -879,6 +880,7 @@ function leadHtml() {
 <main class="radar-main">
   <div id="content"><div class="empty">Cargando…</div></div>
 </main>
+<footer style="border-top:1px solid var(--border);padding:16px 24px;margin-top:40px;display:flex;justify-content:space-between;align-items:center;gap:24px;font-size:13px;color:var(--text-muted)"><span>Inmoworking Pro · Radares Especializados</span><span style="display:flex;gap:16px"><a href="privacy.html" style="color:var(--accent);text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:var(--accent);text-decoration:none">Cookies</a></span></footer>
 <script>
 function getTracker(){ return JSON.parse(localStorage.getItem('iwp_tracker')||'{}'); }
 function saveTracker(t){ localStorage.setItem('iwp_tracker', JSON.stringify(t)); }
