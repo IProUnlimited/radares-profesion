@@ -11,8 +11,7 @@ const path = require("path");
 
 const ROOT = __dirname;
 const PROFS_FILE = path.join(ROOT, "professions.json");
-// URL del backend API - puede configurarse con variable de entorno
-const API_BASE = process.env.API_BASE || "https://nexo-leads-api-v2.onrender.com";
+const API_BASE = "https://crm-agente-api.onrender.com";
 
 // Load professions.json
 let PROFS = {};
@@ -180,7 +179,7 @@ async function doLogin(){
   try{
     const r = await fetch(API_BASE + '/auth/login', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ email, password, app_name: "nexo-leads" })
     });
     const data = await r.json().catch(()=>({error:'respuesta no-JSON'}));
     if(!r.ok) throw new Error(data.error || ('HTTP '+r.status));
@@ -540,7 +539,7 @@ function indexHtml(profs) {
 </div>
 <script>
 // ─── Authentication ───────────────────────────────────────────────
-const API_BASE = ${JSON.stringify(API_BASE)};
+const API_BASE = 'https://crm-agente-api.onrender.com';
 function getToken() { return localStorage.getItem('iwp_token') || ''; }
 function setToken(v) { localStorage.setItem('iwp_token', v); }
 function clearToken() { localStorage.removeItem('iwp_token'); document.getElementById('loginPanel').style.display = 'flex'; document.getElementById('appContent').style.display = 'none'; }
