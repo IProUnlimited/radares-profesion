@@ -7,6 +7,8 @@ import { fileURLToPath } from 'url';
 import searchService from './services/searchService.js';
 import bormeService from './services/bormeService.js';
 import boeService from './services/boeService.js';
+import alertsService from './services/alertsService.js';
+import { startAlertProcessor, setupDefaultAlerts } from './schedules/alertProcessor.js';
 import { parseJwt, verifyToken } from './middleware/auth.js';
 
 dotenv.config();
@@ -246,6 +248,51 @@ app.get('/api/search-directory', verifyToken, async (req, res) => {
   }
 });
 
+// FASE 3 - Gestión de Alertas Automáticas
+app.get('/api/alerts', verifyToken, async (req, res) => {
+  try {
+    const alerts = await alertsService.getActiveAlerts();
+
+    res.json({
+      success: true,
+      count: alerts.length,
+      data: alerts
+    });
+  } catch (error) {
+    console.error('[ALERTS_LIST_ERROR]', error.message);
+    res.status(500).json({
+      error: 'Error listando alertas',
+      message: error.message
+    });
+  }
+});
+
+app.post('/api/alerts/create', verifyToken, async (req, res) => {
+  try {
+    const { profession, regions } = req.body;
+
+    if (!profession) {
+      return res.status(400).json({
+        error: 'Parámetro requerido: profession'
+      });
+    }
+
+    const alerts = await alertsService.createAlerts(profession, regions || ['Madrid']);
+
+    res.json({
+      success: true,
+      count: alerts.length,
+      data: alerts
+    });
+  } catch (error) {
+    console.error('[ALERTS_CREATE_ERROR]', error.message);
+    res.status(500).json({
+      error: 'Error creando alertas',
+      message: error.message
+    });
+  }
+});
+
 // Listar profesiones disponibles
 app.get('/api/professions', (req, res) => {
   const professions = [
@@ -263,7 +310,7 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Endpoint no encontrado' });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`✅ Backend escuchando en puerto ${PORT}`);
   console.log(`📍 CORS habilitado para: ${allowedOrigins.join(', ')}`);
   console.log(`\n📡 ENDPOINTS DISPONIBLES:`);
@@ -274,5 +321,16 @@ app.listen(PORT, () => {
   console.log(`📊 GET /api/search-borme - Búsqueda en Registro Mercantil`);
   console.log(`📜 GET /api/search-boe - Búsqueda en Boletín Oficial (subastas, licitaciones)`);
   console.log(`📁 GET /api/search-directory - Búsqueda en Directorios Públicos`);
-  console.log(`\n✨ Multi-source lead generation en desarrollo...`);
+  console.log(`\n🔔 FASE 3 - AUTOMATIZACIÓN DE ALERTAS:`);
+  console.log(`📢 GET /api/alerts - Listar alertas activas`);
+  console.log(`➕ POST /api/alerts/create - Crear nuevas alertas`);
+  console.log(`\n🤖 Iniciando automatización...`);
+
+  // Iniciar procesador de alertas automáticas (cada 6 horas)
+  startAlertProcessor();
+
+  // Configurar alertas por defecto para profesiones clave
+  await setupDefaultAlerts();
+
+  console.log(`\n✨ Sistema completo: Búsqueda multi-fuente + Alertas automáticas`);
 });
