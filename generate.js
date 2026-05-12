@@ -11,7 +11,8 @@ const path = require("path");
 
 const ROOT = __dirname;
 const PROFS_FILE = path.join(ROOT, "professions.json");
-const API_BASE = "https://crm-agente-api.onrender.com";
+// URL del backend API - puede configurarse con variable de entorno
+const API_BASE = process.env.API_BASE || "https://nexo-leads-api.onrender.com";
 
 // Load professions.json
 let PROFS = {};
@@ -539,7 +540,7 @@ function indexHtml(profs) {
 </div>
 <script>
 // ─── Authentication ───────────────────────────────────────────────
-const API_BASE = 'https://crm-agente-api.onrender.com';
+const API_BASE = ${JSON.stringify(API_BASE)};
 function getToken() { return localStorage.getItem('iwp_token') || ''; }
 function setToken(v) { localStorage.setItem('iwp_token', v); }
 function clearToken() { localStorage.removeItem('iwp_token'); document.getElementById('loginPanel').style.display = 'flex'; document.getElementById('appContent').style.display = 'none'; }
