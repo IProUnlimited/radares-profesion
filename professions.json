@@ -193,10 +193,7 @@
     "category": "Construcción & Reforma",
     "query": "empresas de trabajos verticales",
     "multiplier": 1.5,
-    "sources": [
-      "google_alerts_reforma",
-      "borme_empresas_servicios"
-    ],
+    "sources": [],
     "services": [
       "Limpieza de fachadas",
       "Reparación de fachadas",
