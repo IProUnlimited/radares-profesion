@@ -3,6 +3,7 @@
     "label": "Agente Inmobiliario",
     "icon": "🏠",
     "color": "#0ea5e9",
+    "category": "Inmobiliario",
     "query": "agencias inmobiliarias",
     "multiplier": 1.7,
     "sources": [
@@ -25,6 +26,7 @@
     "label": "Gerente Inmobiliario",
     "icon": "📈",
     "color": "#1d4ed8",
+    "category": "Inmobiliario",
     "query": "agencias inmobiliarias",
     "multiplier": 1.7,
     "sources": [
@@ -44,6 +46,7 @@
     "label": "Reformas Integrales",
     "icon": "🔨",
     "color": "#f59e0b",
+    "category": "Construcción & Reforma",
     "query": "empresas de reformas",
     "multiplier": 1.4,
     "sources": [
@@ -68,6 +71,7 @@
     "label": "Arquitecto",
     "icon": "📐",
     "color": "#7c3aed",
+    "category": "Construcción & Reforma",
     "query": "estudios de arquitectura",
     "multiplier": 1.4,
     "sources": [],
@@ -85,6 +89,7 @@
     "label": "Bufete de Abogados",
     "icon": "⚖️",
     "color": "#0f172a",
+    "category": "Legal & Fiscal",
     "query": "despachos de abogados",
     "multiplier": 1.7,
     "sources": [
@@ -108,6 +113,7 @@
     "label": "Asesor Financiero",
     "icon": "💼",
     "color": "#059669",
+    "category": "Legal & Fiscal",
     "query": "asesorías financieras",
     "multiplier": 1.4,
     "sources": [
@@ -127,6 +133,7 @@
     "label": "Inversor Inmobiliario",
     "icon": "💰",
     "color": "#16a34a",
+    "category": "Inmobiliario",
     "query": "consultoras de inversión",
     "multiplier": 1.6,
     "sources": [
@@ -145,6 +152,7 @@
     "label": "Administrador de Fincas",
     "icon": "🏢",
     "color": "#475569",
+    "category": "Inmobiliario",
     "query": "administradores de fincas",
     "multiplier": 1.7,
     "sources": [
@@ -163,6 +171,7 @@
     "label": "Decoración / Interiorismo",
     "icon": "🎨",
     "color": "#db2777",
+    "category": "Decoración & Tecnología",
     "query": "empresas de decoración de interiores",
     "multiplier": 1.4,
     "sources": [
@@ -181,6 +190,7 @@
     "label": "Trabajos Verticales",
     "icon": "🪢",
     "color": "#dc2626",
+    "category": "Construcción & Reforma",
     "query": "empresas de trabajos verticales",
     "multiplier": 1.5,
     "sources": [],
@@ -204,6 +214,7 @@
     "label": "Inteligencia Artificial",
     "icon": "🤖",
     "color": "#2563eb",
+    "category": "Decoración & Tecnología",
     "query": "empresas de tecnología e informática",
     "multiplier": 1.3,
     "sources": [
@@ -225,6 +236,7 @@
     "label": "Gestoría",
     "icon": "📋",
     "color": "#0891b2",
+    "category": "Legal & Fiscal",
     "query": "gestorías",
     "multiplier": 1.5,
     "sources": [
@@ -243,6 +255,7 @@
     "label": "Notaría",
     "icon": "📜",
     "color": "#92400e",
+    "category": "Inmobiliario",
     "query": "notarías",
     "multiplier": 1.5,
     "sources": [
@@ -261,6 +274,7 @@
     "label": "Propietario",
     "icon": "🔑",
     "color": "#9333ea",
+    "category": "Inmobiliario",
     "query": "agencias inmobiliarias",
     "multiplier": 1.5,
     "sources": [],
@@ -276,6 +290,7 @@
     "label": "Promotor Inmobiliario",
     "icon": "🏗️",
     "color": "#ea580c",
+    "category": "Inmobiliario",
     "query": "promotoras inmobiliarias",
     "multiplier": 1.7,
     "sources": [],
@@ -292,6 +307,7 @@
     "label": "Correduría de Seguros",
     "icon": "🛡️",
     "color": "#0d9488",
+    "category": "Servicios Especializados",
     "query": "corredurías de seguros",
     "multiplier": 1.4,
     "sources": [
@@ -310,6 +326,7 @@
     "label": "Carpintería",
     "icon": "🪚",
     "color": "#a16207",
+    "category": "Construcción & Reforma",
     "query": "carpinterías",
     "multiplier": 1.3,
     "sources": [],
@@ -327,6 +344,7 @@
     "label": "Empresa de Limpieza",
     "icon": "🧹",
     "color": "#06b6d4",
+    "category": "Servicios Especializados",
     "query": "empresas de limpieza",
     "multiplier": 1.2,
     "sources": [
@@ -345,6 +363,7 @@
     "label": "Mudanzas",
     "icon": "📦",
     "color": "#be185d",
+    "category": "Servicios Especializados",
     "query": "empresas de mudanzas",
     "multiplier": 1.3,
     "sources": [
@@ -364,6 +383,7 @@
     "label": "Telecomunicaciones",
     "icon": "📡",
     "color": "#4338ca",
+    "category": "Decoración & Tecnología",
     "query": "empresas de telecomunicaciones",
     "multiplier": 1.2,
     "sources": [],
@@ -380,6 +400,7 @@
     "label": "Pintura y Fachadas",
     "icon": "🖌️",
     "color": "#65a30d",
+    "category": "Construcción & Reforma",
     "query": "empresas de pintura y fachadas",
     "multiplier": 1.3,
     "sources": [],
@@ -395,8 +416,9 @@
     "label": "Servicios Básicos",
     "icon": "🔧",
     "color": "#6b7280",
+    "category": "Servicios Básicos",
     "query": "empresas de servicios generales",
-    "multiplier": 1,
+    "multiplier": 1.0,
     "sources": [
       "borme_cambios_domicilio"
     ],
@@ -406,6 +428,150 @@
       "Mantenimiento del hogar",
       "Servicios urgentes",
       "Manitas profesional"
+    ]
+  },
+  "fontaneria": {
+    "label": "Fontanería",
+    "icon": "🚰",
+    "color": "#0369a1",
+    "category": "Construcción & Reforma",
+    "query": "fontanerías",
+    "multiplier": 1.3,
+    "sources": [],
+    "services": [
+      "Instalación de tuberías",
+      "Reparación de fugas",
+      "Desatranques",
+      "Calefacción",
+      "Agua caliente sanitaria",
+      "Bombas de agua",
+      "Mantenimiento preventivo"
+    ]
+  },
+  "electricista": {
+    "label": "Electricista",
+    "icon": "⚡",
+    "color": "#eab308",
+    "category": "Construcción & Reforma",
+    "query": "electricistas",
+    "multiplier": 1.3,
+    "sources": [],
+    "services": [
+      "Instalaciones eléctricas",
+      "Reparación de averías",
+      "Cuadros eléctricos",
+      "Iluminación",
+      "Sistemas de seguridad",
+      "Puestas a tierra",
+      "Certificados eléctricos"
+    ]
+  },
+  "jardineria": {
+    "label": "Jardinería y Paisajismo",
+    "icon": "🌿",
+    "color": "#22c55e",
+    "category": "Servicios Especializados",
+    "query": "jardinería",
+    "multiplier": 1.2,
+    "sources": [],
+    "services": [
+      "Diseño de jardines",
+      "Instalación de césped",
+      "Podas y mantenimiento",
+      "Riego automatizado",
+      "Árboles ornamentales",
+      "Plantas de interior",
+      "Trabajos de paisajismo"
+    ]
+  },
+  "veterinario": {
+    "label": "Clínica Veterinaria",
+    "icon": "🐾",
+    "color": "#ec4899",
+    "category": "Servicios Especializados",
+    "query": "clínicas veterinarias",
+    "multiplier": 1.2,
+    "sources": [],
+    "services": [
+      "Consultas generales",
+      "Cirugías",
+      "Análisis y laboratorio",
+      "Odontología veterinaria",
+      "Vacunaciones",
+      "Urgencias 24h",
+      "Peluquería canina"
+    ]
+  },
+  "consultor_rh": {
+    "label": "Consultoría de Recursos Humanos",
+    "icon": "👥",
+    "color": "#8b5cf6",
+    "category": "Legal & Fiscal",
+    "query": "consultorías de recursos humanos",
+    "multiplier": 1.4,
+    "sources": [],
+    "services": [
+      "Selección de personal",
+      "Formación corporativa",
+      "Asesoramiento laboral",
+      "Evaluación de competencias",
+      "Asesoramiento en conflictos laborales",
+      "Outsourcing de RRHH",
+      "Cultura organizacional"
+    ]
+  },
+  "peluqueria": {
+    "label": "Peluquería",
+    "icon": "💇",
+    "color": "#f97316",
+    "category": "Servicios Especializados",
+    "query": "peluquerías",
+    "multiplier": 1.1,
+    "sources": [],
+    "services": [
+      "Cortes de pelo",
+      "Tintes y coloración",
+      "Tratamientos capilares",
+      "Peinados especiales",
+      "Asesoramiento de imagen",
+      "Servicios a domicilio",
+      "Barbería"
+    ]
+  },
+  "logistica": {
+    "label": "Logística y Transporte",
+    "icon": "🚚",
+    "color": "#06b6d4",
+    "category": "Servicios Especializados",
+    "query": "empresas de logística",
+    "multiplier": 1.3,
+    "sources": [],
+    "services": [
+      "Transporte de mercancías",
+      "Almacenamiento",
+      "Distribución",
+      "Aduanas y documentación",
+      "Seguimiento en tiempo real",
+      "Gestión de inventarios",
+      "Transporte especializado"
+    ]
+  },
+  "consultor_ambiental": {
+    "label": "Consultoría Ambiental",
+    "icon": "♻️",
+    "color": "#16a34a",
+    "category": "Legal & Fiscal",
+    "query": "consultorías ambientales",
+    "multiplier": 1.3,
+    "sources": [],
+    "services": [
+      "Auditorías ambientales",
+      "Estudios de impacto ambiental",
+      "Gestión de residuos",
+      "Sistemas de certificación",
+      "Cumplimiento normativo ambiental",
+      "Asesoramiento en sostenibilidad",
+      "Informes ambientales"
     ]
   }
 }

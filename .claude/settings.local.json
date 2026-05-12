@@ -9,7 +9,11 @@
       "mcp__Claude_in_Chrome__browser_batch",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "mcp__Claude_in_Chrome__switch_browser"
+      "mcp__Claude_in_Chrome__switch_browser",
+      "Bash(git commit -m 'docs: agregar screenshots automáticos de radares \\(desktop + mobile\\) *)",
+      "Bash(node validate.js)",
+      "Bash(grep -n \"C:\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\Radares\" generate.js)",
+      "Bash(npm test *)"
     ]
   }
 }

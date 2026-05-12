@@ -2,20 +2,20 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>Radar Gerente Inmobiliario — IWPro</title>
+<title>Radar Jardinería y Paisajismo — IWPro</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="styles.css">
 <style>
-:root{--c:#1d4ed8}
+:root{--c:#22c55e}
 </style>
 </head>
 <body>
 <header class="radar-header" style="display:flex;justify-content:space-between;align-items:flex-start">
   <div style="flex:1">
     <a href="index.html" class="back">← Todos los radares</a>
-    <div class="icon">📈</div>
-    <h1>Radar Gerente Inmobiliario</h1>
-    <p>Captación de leads especializada para gerente inmobiliario</p>
+    <div class="icon">🌿</div>
+    <h1>Radar Jardinería y Paisajismo</h1>
+    <p>Captación de leads especializada para jardinería y paisajismo</p>
   </div>
   <button id="radarThemeToggle" style="background:none;border:none;font-size:24px;cursor:pointer;margin-top:8px">🌙</button>
 </header>
@@ -41,20 +41,20 @@
     <div id="authStatus" style="font-size:12px;color:#94a3b8;margin-top:6px"></div>
     <div id="err" class="error"></div>
     <div class="meta" style="margin-top:14px">
-      <span>Profesión: <b>Gerente Inmobiliario</b></span>
-      <span>Multiplicador score: <b>×1.7</b></span>
-      <span>Query: <b>agencias inmobiliarias</b></span>
+      <span>Profesión: <b>Jardinería y Paisajismo</b></span>
+      <span>Multiplicador score: <b>×1.2</b></span>
+      <span>Query: <b>jardinería</b></span>
     </div>
   </section>
 
   <section class="panel">
     <h2>Servicios cubiertos</h2>
-    <ul class="services"><li>Dirección de equipo comercial</li><li>Estrategia de marketing</li><li>Análisis de mercado</li><li>Control financiero</li><li>Cumplimiento normativo</li><li>Gestión de CRM</li><li>Formación del equipo</li></ul>
+    <ul class="services"><li>Diseño de jardines</li><li>Instalación de césped</li><li>Podas y mantenimiento</li><li>Riego automatizado</li><li>Árboles ornamentales</li><li>Plantas de interior</li><li>Trabajos de paisajismo</li></ul>
   </section>
 
   <section class="panel">
     <h2>Fuentes activas</h2>
-    <p style="margin:0;color:#cbd5e1;font-size:13px"><code>borme_inmobiliarias</code></p>
+    <p style="margin:0;color:#cbd5e1;font-size:13px"><em>Directorios públicos (OSM · Google Places · Foursquare)</em></p>
   </section>
 
   <section class="panel">
@@ -65,9 +65,9 @@
     <div id="results"><div class="empty">Pulsa "Generar leads" para empezar</div></div>
   </section>
 </main>
-<footer>Inmoworking Pro · Radar Especializado · Gerente Inmobiliario</footer>
+<footer>Inmoworking Pro · Radar Especializado · Jardinería y Paisajismo</footer>
 <script>
-const PROFESSION = "gerente_inmobiliario";
+const PROFESSION = "jardineria";
 const API_BASE = "https://crm-agente-api.onrender.com";
 const $ = sel => document.querySelector(sel);
 const btn = $('#go'), errBox = $('#err'), out = $('#results');
