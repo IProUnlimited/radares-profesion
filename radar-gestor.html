@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>Radar Gestoría — IWPro</title>
+<title>Gestoría — Nexo Leads</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="styles.css">
 <style>
@@ -65,7 +65,7 @@
     <div id="results"><div class="empty">Pulsa "Generar leads" para empezar</div></div>
   </section>
 </main>
-<footer style="border-top:1px solid #333;padding:12px;margin-top:24px;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:12px;color:#94a3b8"><span>Inmoworking Pro · Gestoría</span><span style="display:flex;gap:12px"><a href="privacy.html" style="color:#60a5fa;text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:#60a5fa;text-decoration:none">Cookies</a></span></footer>
+<footer style="border-top:1px solid #333;padding:12px;margin-top:24px;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:12px;color:#94a3b8"><span>Nexo Leads · Gestoría</span><span style="display:flex;gap:12px"><a href="privacy.html" style="color:#60a5fa;text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:#60a5fa;text-decoration:none">Cookies</a></span></footer>
 <script>
 const PROFESSION = "gestor";
 const API_BASE = "https://crm-agente-api.onrender.com";
@@ -259,7 +259,7 @@ function saveToTracker(id){
     tracker[id] = {
       id: id,
       profession: PROFESSION,
-      professionLabel: document.title.replace(/^Radar /,'').replace(/ — IWPro$/,''),
+      professionLabel: document.title.replace(/ — Nexo Leads$/,''),
       name: f.name, phone: f.phone, email: f.email, website: f.website,
       city: f.city, address: f.address, score: f.score,
       rating: f.rating, reviews_count: f.reviews_count, notes: f.notes,
