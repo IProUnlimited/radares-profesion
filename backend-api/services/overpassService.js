@@ -4,6 +4,49 @@ const OVERPASS_API = 'https://overpass-api.de/api/interpreter';
 
 // Mapeo de profesiones a queries de Overpass
 const PROFESSION_TAGS = {
+  // Inmobiliario
+  'agente_inmobiliario': 'office=real_estate',
+  'gerente_inmobiliario': 'office=real_estate',
+  'propietario': 'building=residential',
+  'promotor': 'office=real_estate',
+  'notario': 'office=notary',
+
+  // Construcción & Reforma
+  'reformista': 'craft=builder OR amenity=construction',
+  'arquitecto': 'office=architect',
+  'carpinteria': 'craft=carpenter',
+  'electricista': 'craft=electrician',
+  'fontaneria': 'craft=plumber',
+  'jardineria': 'craft=gardener',
+  'trabajos_verticales': 'craft=roofer OR craft=painter OR building=construction',
+
+  // Legal & Fiscal
+  'abogado': 'office=lawyer',
+  'asesor_financiero': 'office=financial',
+  'gestor': 'office=accountant',
+  'consultor_rh': 'office=consulting',
+  'consultor_ambiental': 'office=consulting',
+
+  // Servicios Especializados
+  'aseguradora': 'office=insurance',
+  'veterinario': 'amenity=veterinary',
+  'peluqueria': 'shop=hairdresser',
+  'limpieza': 'amenity=cleaning',
+  'mudanzas': 'shop=moving',
+  'logistica': 'office=logistics',
+
+  // Tecnología
+  'inteligencia_artificial': 'office=technology OR office=it',
+  'telecomunicaciones': 'office=telecom OR shop=mobile_phone',
+
+  // Decoración & Diseño
+  'decorador': 'office=architect OR craft=decorator',
+
+  // Servicios Básicos
+  'servicios_basicos': 'utility=water OR utility=electricity',
+  'proveedor_exterior': 'shop=general',
+
+  // Legacy (compatibilidad)
   'hospitales': 'amenity=hospital',
   'hoteles': 'tourism=hotel',
   'museos': 'tourism=museum',
@@ -15,7 +58,8 @@ const PROFESSION_TAGS = {
   'bancos': 'amenity=bank',
   'farmacias': 'amenity=pharmacy',
   'restaurantes': 'amenity=restaurant',
-  'agencias_inmobiliarias': 'office=real_estate'
+  'agencias_inmobiliarias': 'office=real_estate',
+  'administrador_fincas': 'office=real_estate'
 };
 
 const overpassService = {
