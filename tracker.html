@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<title>Tracker de Leads — IWPro</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="styles.css">
+<script>const t=localStorage.getItem('theme')||'auto';const d=window.matchMedia('(prefers-color-scheme:dark)').matches;const isDark=t==='auto'?d:t==='dark';document.documentElement.classList.toggle('dark-mode',isDark);</script>
+<style>
+:root{--c:#3b82f6}
+.tracker-table{width:100%;border-collapse:collapse;font-size:13px}
+.tracker-table th{background:var(--input-bg);padding:10px 8px;text-align:left;font-weight:600;border-bottom:2px solid var(--border);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);position:sticky;top:0;z-index:1}
+.tracker-table td{padding:10px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+.tracker-table tr:hover{background:var(--input-bg)}
+.tracker-table select,.tracker-table input{background:transparent;border:1px solid var(--border);padding:6px 8px;border-radius:6px;color:var(--text);font-size:12px;font-family:inherit;width:100%;min-width:90px}
+.tracker-table select:focus,.tracker-table input:focus{outline:none;border-color:var(--c)}
+.status-pendiente{color:#f59e0b;border-color:#f59e0b !important}
+.status-contactado{color:#3b82f6;border-color:#3b82f6 !important}
+.status-interesado{color:#06b6d4;border-color:#06b6d4 !important}
+.status-cliente{color:#10b981;border-color:#10b981 !important;font-weight:700}
+.status-descartado{color:#94a3b8}
+.del-btn{background:transparent !important;border:0 !important;cursor:pointer;color:#fca5a5;font-size:16px;padding:4px 8px !important;width:auto !important;min-width:0 !important}
+.del-btn:hover{color:#ef4444}
+.lead-link{color:var(--c);text-decoration:none;font-weight:600}
+.lead-link:hover{text-decoration:underline}
+.stat-card{background:var(--input-bg);padding:14px;border-radius:10px;text-align:center}
+.stat-card .num{font-size:24px;font-weight:700;color:var(--c)}
+.stat-card .lbl{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+</style>
+</head>
+<body>
+<header class="radar-header" style="display:flex;justify-content:space-between;align-items:flex-start">
+  <div style="flex:1">
+    <a href="index.html" class="back">← Todos los radares</a>
+    <h1>📋 Tracker de Leads</h1>
+    <p id="trackerCount">Cargando…</p>
+  </div>
+  <button id="themeToggle" style="background:none;border:none;font-size:24px;cursor:pointer;margin-top:8px">🌙</button>
+</header>
+<main class="radar-main" style="max-width:1500px">
+  <section class="panel">
+    <h2>Resumen</h2>
+    <div id="stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px"></div>
+  </section>
+  <section class="panel">
+    <h2>Filtros y exportación</h2>
+    <div class="row">
+      <select id="filterProf" class="filter-select"><option value="">Todas las profesiones</option><option value="agente_inmobiliario">Agente Inmobiliario</option><option value="gerente_inmobiliario">Gerente Inmobiliario</option><option value="reformista">Reformas Integrales</option><option value="arquitecto">Arquitecto</option><option value="abogado">Bufete de Abogados</option><option value="asesor_financiero">Asesor Financiero</option><option value="inversor">Inversor Inmobiliario</option><option value="administrador_fincas">Administrador de Fincas</option><option value="decorador">Decoración / Interiorismo</option><option value="trabajos_verticales">Trabajos Verticales</option><option value="inteligencia_artificial">Inteligencia Artificial</option><option value="gestor">Gestoría</option><option value="notario">Notaría</option><option value="propietario">Propietario</option><option value="promotor">Promotor Inmobiliario</option><option value="aseguradora">Correduría de Seguros</option><option value="carpinteria">Carpintería</option><option value="limpieza">Empresa de Limpieza</option><option value="mudanzas">Mudanzas</option><option value="telecomunicaciones">Telecomunicaciones</option><option value="proveedor_exterior">Pintura y Fachadas</option><option value="servicios_basicos">Servicios Básicos</option><option value="fontaneria">Fontanería</option><option value="electricista">Electricista</option><option value="jardineria">Jardinería y Paisajismo</option><option value="veterinario">Clínica Veterinaria</option><option value="consultor_rh">Consultoría de Recursos Humanos</option><option value="peluqueria">Peluquería</option><option value="logistica">Logística y Transporte</option><option value="consultor_ambiental">Consultoría Ambiental</option></select>
+      <select id="filterStatus" class="filter-select">
+        <option value="">Todos los estados</option>
+        <option value="pendiente">Pendiente</option>
+        <option value="contactado">Contactado</option>
+        <option value="interesado">Interesado</option>
+        <option value="cliente">Cliente</option>
+        <option value="descartado">Descartado</option>
+      </select>
+      <input id="filterSearch" type="text" placeholder="Buscar nombre, ciudad, email…" style="flex:1;min-width:200px;background:var(--input-bg);border:1px solid var(--border);padding:10px;border-radius:6px;color:var(--text);font-family:inherit">
+      <button id="exportCSV" style="background:linear-gradient(135deg,var(--c) 0%,#0284c7 100%);border:0;color:white;padding:10px 16px;border-radius:6px;cursor:pointer;font-weight:600;font-family:inherit">📥 CSV</button>
+      <button id="exportJSON" style="background:#475569;border:0;color:white;padding:10px 16px;border-radius:6px;cursor:pointer;font-weight:600;font-family:inherit">📦 JSON</button>
+      <button id="importBtn" style="background:#475569;border:0;color:white;padding:10px 16px;border-radius:6px;cursor:pointer;font-weight:600;font-family:inherit">📤 Importar</button>
+      <input id="importFile" type="file" accept=".json" style="display:none">
+    </div>
+  </section>
+  <section class="panel">
+    <h2>Leads guardados</h2>
+    <div style="overflow-x:auto">
+      <table class="tracker-table">
+        <thead>
+          <tr>
+            <th>Profesión</th><th>Nombre</th><th>Teléfono</th><th>Email</th><th>Web</th>
+            <th>Ciudad</th><th>Estado</th><th>Fecha contacto</th><th>Notas</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="leadsBody"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+<footer style="border-top:1px solid var(--border);padding:16px 24px;margin-top:40px;display:flex;justify-content:space-between;align-items:center;gap:24px;font-size:13px;color:var(--text-muted)"><span>Inmoworking Pro · Radares Especializados</span><span style="display:flex;gap:16px"><a href="privacy.html" style="color:var(--accent);text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:var(--accent);text-decoration:none">Cookies</a></span></footer>
+<script>
+function getTracker(){ return JSON.parse(localStorage.getItem('iwp_tracker')||'{}'); }
+function saveTracker(t){ localStorage.setItem('iwp_tracker', JSON.stringify(t)); }
+function escapeH(s){return String(s||'').replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");}
+function showToast(msg){
+  const t=document.createElement('div');
+  t.style.cssText='position:fixed;bottom:20px;right:20px;background:#1e293b;color:#f0f4f8;padding:12px 16px;border-radius:8px;font-size:13px;z-index:9999;border:1px solid #333';
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2500);
+}
+
+function renderStats(){
+  const tracker = getTracker();
+  const leads = Object.values(tracker);
+  const counts = {total:leads.length,pendiente:0,contactado:0,interesado:0,cliente:0,descartado:0};
+  leads.forEach(l => { counts[l.status] = (counts[l.status]||0)+1; });
+  document.getElementById('stats').innerHTML =
+    '<div class="stat-card"><div class="num">'+counts.total+'</div><div class="lbl">Total</div></div>'
+    +'<div class="stat-card"><div class="num" style="color:#f59e0b">'+counts.pendiente+'</div><div class="lbl">Pendiente</div></div>'
+    +'<div class="stat-card"><div class="num" style="color:#3b82f6">'+counts.contactado+'</div><div class="lbl">Contactado</div></div>'
+    +'<div class="stat-card"><div class="num" style="color:#06b6d4">'+counts.interesado+'</div><div class="lbl">Interesado</div></div>'
+    +'<div class="stat-card"><div class="num" style="color:#10b981">'+counts.cliente+'</div><div class="lbl">Cliente</div></div>'
+    +'<div class="stat-card"><div class="num" style="color:#94a3b8">'+counts.descartado+'</div><div class="lbl">Descartado</div></div>';
+}
+
+function render(){
+  const tracker = getTracker();
+  const allLeads = Object.values(tracker);
+  const profFilter = document.getElementById('filterProf').value;
+  const statusFilter = document.getElementById('filterStatus').value;
+  const search = document.getElementById('filterSearch').value.toLowerCase();
+  const filtered = allLeads.filter(l => {
+    if(profFilter && l.profession !== profFilter) return false;
+    if(statusFilter && l.status !== statusFilter) return false;
+    if(search){
+      const txt = (l.name+' '+l.city+' '+l.email+' '+l.phone+' '+(l.professionLabel||'')).toLowerCase();
+      if(!txt.includes(search)) return false;
+    }
+    return true;
+  }).sort((a,b)=>(b.added_at||'').localeCompare(a.added_at||''));
+  document.getElementById('trackerCount').textContent = filtered.length + ' de ' + allLeads.length + ' leads';
+  renderStats();
+  const body = document.getElementById('leadsBody');
+  if(!filtered.length){
+    body.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--text-muted);padding:32px">'+(allLeads.length?'Ningún lead coincide con los filtros':'No hay leads guardados todavía. Ve a un radar, busca leads y pulsa "Guardar en tracker" sobre uno.')+'</td></tr>';
+    return;
+  }
+  body.innerHTML = filtered.map(l => {
+    const statuses = ['pendiente','contactado','interesado','cliente','descartado'];
+    return '<tr data-id="'+l.id+'">'
+      +'<td>'+escapeH(l.professionLabel||l.profession)+'</td>'
+      +'<td><a class="lead-link" href="lead.html?id='+l.id+'">'+escapeH(l.name)+'</a></td>'
+      +'<td>'+(l.phone?'<a class="lead-link" href="tel:'+escapeH(l.phone)+'">'+escapeH(l.phone)+'</a>':'<span style="color:var(--text-muted)">—</span>')+'</td>'
+      +'<td>'+(l.email?'<a class="lead-link" href="mailto:'+escapeH(l.email)+'">'+escapeH(l.email)+'</a>':'<span style="color:var(--text-muted)">—</span>')+'</td>'
+      +'<td>'+(l.website?'<a class="lead-link" href="'+escapeH(l.website)+'" target="_blank" rel="noopener">🌐</a>':'<span style="color:var(--text-muted)">—</span>')+'</td>'
+      +'<td>'+escapeH(l.city||'—')+'</td>'
+      +'<td><select class="status-sel status-'+l.status+'" data-id="'+l.id+'">'
+        + statuses.map(s=>'<option value="'+s+'"'+(l.status===s?' selected':'')+'>'+s+'</option>').join('')
+      +'</select></td>'
+      +'<td><input class="contact-input" type="date" data-id="'+l.id+'" value="'+escapeH(l.contact_date||'')+'"></td>'
+      +'<td><input class="notes-input" type="text" data-id="'+l.id+'" value="'+escapeH(l.tracker_notes||'')+'" placeholder="…"></td>'
+      +'<td><button class="del-btn" data-id="'+l.id+'" title="Eliminar">🗑️</button></td>'
+      +'</tr>';
+  }).join('');
+  bindRow();
+}
+
+function updateLead(id, field, value){
+  const tracker = getTracker();
+  if(!tracker[id]) return;
+  const old = tracker[id][field];
+  if(old === value) return;
+  tracker[id][field] = value;
+  tracker[id].events = tracker[id].events || [];
+  tracker[id].events.push({date:new Date().toISOString(),type:'update',note:field+': '+(old||'∅')+' → '+(value||'∅')});
+  saveTracker(tracker);
+}
+
+function bindRow(){
+  document.querySelectorAll('.status-sel').forEach(s => s.addEventListener('change', () => {
+    updateLead(s.dataset.id, 'status', s.value);
+    s.className = 'status-sel status-' + s.value;
+    renderStats();
+    showToast('✓ Estado actualizado');
+  }));
+  document.querySelectorAll('.contact-input').forEach(i => i.addEventListener('change', () => updateLead(i.dataset.id,'contact_date',i.value)));
+  document.querySelectorAll('.notes-input').forEach(i => i.addEventListener('change', () => updateLead(i.dataset.id,'tracker_notes',i.value)));
+  document.querySelectorAll('.del-btn').forEach(b => b.addEventListener('click', () => {
+    if(!confirm('¿Eliminar este lead del tracker? No se puede deshacer.')) return;
+    const t = getTracker(); delete t[b.dataset.id]; saveTracker(t); render(); showToast('✓ Eliminado');
+  }));
+}
+
+document.getElementById('filterProf').addEventListener('change', render);
+document.getElementById('filterStatus').addEventListener('change', render);
+document.getElementById('filterSearch').addEventListener('input', render);
+
+document.getElementById('exportCSV').addEventListener('click', () => {
+  const tracker = getTracker();
+  const rows = [['Profesión','Nombre','Teléfono','Email','Web','Ciudad','Dirección','Estado','Fecha contacto','Notas','Score','Rating','Añadido','Eventos']];
+  Object.values(tracker).forEach(l => rows.push([
+    l.professionLabel||l.profession, l.name, l.phone, l.email, l.website, l.city, l.address||'',
+    l.status, l.contact_date||'', l.tracker_notes||'', l.score||'', l.rating||'',
+    new Date(l.added_at).toLocaleString(),
+    (l.events||[]).length
+  ]));
+  const csv = rows.map(r => r.map(c => '"'+String(c||'').replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'tracker-leads-' + new Date().toISOString().split('T')[0] + '.csv';
+  a.click(); showToast('✓ CSV descargado');
+});
+
+document.getElementById('exportJSON').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(getTracker(),null,2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'tracker-leads-' + new Date().toISOString().split('T')[0] + '.json';
+  a.click(); showToast('✓ JSON descargado');
+});
+
+document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
+document.getElementById('importFile').addEventListener('change', e => {
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      const current = getTracker();
+      const merged = {...current, ...data};
+      if(!confirm('Importar '+Object.keys(data).length+' leads? Se fusionarán con los actuales.')) return;
+      saveTracker(merged); render(); showToast('✓ Importados '+Object.keys(data).length+' leads');
+    } catch(err) { showToast('❌ Archivo inválido'); }
+  };
+  reader.readAsText(file);
+});
+
+render();
+
+const themeToggle = document.getElementById('themeToggle');
+function updateThemeBtn(){
+  const t = localStorage.getItem('theme') || 'auto';
+  themeToggle.textContent = t === 'dark' ? '☀️' : t === 'light' ? '🌙' : '⚪';
+}
+updateThemeBtn();
+themeToggle.addEventListener('click', () => {
+  const t = localStorage.getItem('theme') || 'auto';
+  const next = t === 'auto' ? 'light' : t === 'light' ? 'dark' : 'auto';
+  localStorage.setItem('theme', next);
+  const d = window.matchMedia('(prefers-color-scheme:dark)').matches;
+  const isDark = next==='auto'?d:next==='dark';
+  document.documentElement.classList.toggle('dark-mode', isDark);
+  updateThemeBtn();
+});
+</script>
+</body></html>

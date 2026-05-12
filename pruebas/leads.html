@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lead Detail — NEXOLEADS PRO</title>
+    <style>
+        :root {
+            --bg: #050a15;
+            --accent: #0ea5e9;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #f8fafc;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', system-ui, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .detail-container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(17, 26, 46, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+        }
+
+        /* Header de la Ficha */
+        .lead-header {
+            padding: 40px;
+            background: linear-gradient(to bottom right, rgba(14, 165, 233, 0.15), transparent);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .badge-status {
+            background: #0ea5e9;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h1 { font-size: 2rem; margin: 15px 0 5px; letter-spacing: -1px; }
+        .location { color: #94a3b8; font-size: 1rem; }
+
+        /* Grid de Inteligencia */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .stat-item {
+            background: var(--bg);
+            padding: 25px;
+            text-align: center;
+        }
+
+        .stat-value { display: block; font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+        .stat-label { font-size: 0.75rem; color: #64748b; text-transform: uppercase; margin-top: 4px; }
+
+        /* Contenido Principal */
+        .content { padding: 40px; }
+        
+        .section-title {
+            font-size: 0.9rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .services-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        .service-tag {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+
+        .source-box {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 20px;
+            margin-top: 10px;
+        }
+
+        /* Acciones Premium */
+        .action-bar {
+            padding: 30px 40px;
+            background: rgba(255,255,255,0.02);
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn-unlock {
+            flex: 2;
+            background: white;
+            color: black;
+            border: none;
+            padding: 18px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-unlock:hover { transform: scale(1.02); }
+
+        .btn-dismiss {
+            flex: 1;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: #94a3b8;
+            border-radius: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="detail-container">
+        <div class="lead-header">
+            <div>
+                <span class="badge-status">Alta Prioridad</span>
+                <h1>Oportunidad de Captación</h1>
+                <span class="location">📍 Madrid, Distrito Salamanca</span>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-size: 2rem;">🏠</div>
+                <div style="color: #64748b; font-size: 0.8rem;">Radar Agente Inmobiliario</div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="stat-value">×1.7</span>
+                <span class="stat-label">Multiplicador Score</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">BOE</span>
+                <span class="stat-label">Fuente de Origen[cite: 2]</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">A+</span>
+                <span class="stat-label">Rating Calidad[cite: 1]</span>
+            </div>
+        </div>
+
+        <div class="content">
+            <span class="section-title">Servicios Sugeridos</span>
+            <div class="services-list">
+                <!-- Generado dinámicamente desde professions.json -->
+                <div class="service-tag">Captación de inmuebles[cite: 2]</div>
+                <div class="service-tag">Valoración y tasación[cite: 2]</div>
+                <div class="service-tag">Intermediación compra-venta[cite: 2]</div>
+                <div class="service-tag">Acompañamiento a notaría[cite: 2]</div>
+            </div>
+
+            <span class="section-title">Análisis del Radar</span>
+            <div class="source-box">
+                <p style="margin: 0; color: #cbd5e1; line-height: 1.6;">
+                    Este lead ha sido detectado mediante el cruce de datos de <b>BOE Subastas</b> y <b>BORME Inmobiliarias</b>[cite: 2]. 
+                    La actividad sugiere una necesidad inmediata de gestión patrimonial y asesoría hipotecaria[cite: 2].
+                </p>
+            </div>
+        </div>
+
+        <div class="action-bar">
+            <button class="btn-unlock">Desbloquear Contacto Directo</button>
+            <button class="btn-dismiss">Descartar</button>
+        </div>
+    </div>
+
+</body>
+</html>

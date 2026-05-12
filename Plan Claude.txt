@@ -1,0 +1,450 @@
+# Plan de Desarrollo Completo: Radares-Profesion
+
+## Contexto
+El proyecto Radares-Profesion necesita evolucionarse de "prototipo funcional" a "producción-ready". Actualmente tiene diseño moderno pero carece de validación de datos, funcionalidades clave, y automatización CI/CD. El usuario quiere desarrollar TODO en el **orden más favorable técnicamente**.
+
+---
+
+## 🎯 Orden Recomendado (Fundamentación Técnica)
+
+**Por qué este orden:**
+1. **Calidad primero** → Base sólida previene bugs cascada
+2. **Datos segundo** → Necesarios para probar funcionalidad
+3. **Funcionalidad tercero** → Requiere datos + validación robusta
+4. **Diseño cuarto** → Polido visual sobre base estable
+5. **Infraestructura último** → CI/CD automatiza trabajo anterior
+
+---
+
+## FASE 1: CALIDAD DEL CÓDIGO (Crítico)
+**Duración estimada: 8-10 horas**
+
+### 1.1 Crear Validador de Schema (máxima prioridad)
+**Archivos: crear `validate.js`, actualizar `generate.js`**
+
+```javascript
+// validate.js (nuevo archivo)
+- Validar professions.json contra schema
+- Campos requeridos: label, icon, color, query, multiplier, sources, services
+- Rangos: multiplier 1.0-1.7, services.length > 0
+- Formatos: color regex hex #RRGGBB, emoji unicode válido
+- Reglas: keys alfanuméricas_con_guiones, sin duplicados
+- Generar reporte legible si falla
+```
+
+**Cambios en generate.js:**
+- Integrar validación antes de generar HTMLs
+- Si falla validación: exit con error code 1
+- En modo normal: validar silenciosamente
+- En modo watch: reportar validación en cada cambio
+
+### 1.2 Arreglar Hardcoded Values
+**Archivo: `generate.js`**
+- Línea 46: Cambiar `C:\\Radares-Profesion` por path dinámico
+- Línea 204: "22 radares" → `Object.keys(PROFS).length` (escalable)
+- Agregar dinámica para detectar localhost vs producción
+
+### 1.3 Mejorar Error Handling
+**Archivo: `generate.js`**
+- Try-catch en fs.writeFileSync (línea 216)
+- Logging estructurado (consola con timestamps)
+- Stack traces útiles para debugging
+- Debouncing en watch mode (evitar regeneraciones múltiples)
+
+### 1.4 Tests Básicos
+**Crear `test.js`**
+- Test htmlEscape() con caracteres especiales
+- Test validación schema con datos válidos/inválidos
+- Test generación HTML produce archivos correctos
+- Comando: `npm test`
+
+**Verificación:**
+```bash
+npm test                    # ✓ Todos los tests pasan
+node validate.js            # ✓ professions.json es válido
+node generate.js            # ✓ Genera 22 radares sin errores
+npm run watch               # ✓ Detecta cambios sin múltiples regeneraciones
+```
+
+---
+
+## FASE 2: EXPANSIÓN DE DATOS (Escalabilidad)
+**Duración estimada: 4-6 horas**
+
+### 2.1 Agregar Campo "category" a professions.json
+**Archivo: `professions.json`**
+
+```json
+{
+  "profesion": {
+    // Campos existentes...
+    "category": "Inmobiliario",  // NUEVO
+    "description": "SEO description",  // NUEVO (opcional)
+    "keywords": ["palabra", "clave"]   // NUEVO (opcional para SEO)
+  }
+}
+```
+
+**Categorías propuestas (6 total):**
+- Inmobiliario (7 profesiones)
+- Legal & Fiscal (3)
+- Construcción & Reforma (5)
+- Servicios Especializados (4)
+- Decoración & Tecnología (2)
+- Servicios Básicos (1)
+
+### 2.2 Agregar 8 Nuevas Profesiones
+**Archivo: `professions.json`**
+
+```javascript
+// Nuevas profesiones (mantener multiplicadores coherentes):
+1. fontaneria (1.3) - Servicios Especializados
+2. electricista (1.3) - Construcción
+3. jardineria (1.2) - Servicios Especializados
+4. veterinario (1.2) - Servicios Especializados
+5. consultor_rh (1.4) - Legal & Fiscal
+6. peluqueria (1.1) - Servicios Especializados
+7. logistica (1.3) - Servicios Especializados
+8. consultor_ambiental (1.3) - Legal & Fiscal
+```
+
+Total después: **30 profesiones** (escalable)
+
+### 2.3 Actualizar generate.js para categorías
+**Cambios:**
+- Refactorizar `indexHtml()` para recibir profesiones agrupadas por categoría
+- Template nuevo con tabs/secciones por categoría en index.html
+- Contador dinámico por categoría
+
+**Verificación:**
+```bash
+npm run generate            # ✓ Genera 30 radares + index con categorías
+# Verificar index.html manualmente en navegador
+```
+
+---
+
+## FASE 3: FUNCIONALIDAD (Features)
+**Duración estimada: 12-16 horas**
+
+### 3.1 Búsqueda y Filtro en index.html
+**Archivos: `index.html` (actualizar template), agregar JS inline**
+
+```javascript
+// Funcionalidades:
+1. Input búsqueda en tiempo real (busca contra label + keywords)
+2. Filtros por:
+   - Multiplicador (slider 1.0-1.7)
+   - # de fuentes (select 0, 1-2, 3+)
+   - Categoría (checkboxes)
+3. Orden por: nombre, multiplicador, relevancia
+4. Reset visual
+5. Resaltado de matches en cards
+```
+
+**Método:**
+- Generar data JSON en `<script>` con profesiones
+- Funciones JS: filter(), search(), sort()
+- Debounce en búsqueda (300ms)
+- Persistir búsqueda en URL params (bonus: shareable)
+
+### 3.2 Favoritos con localStorage en radares
+**Archivos: actualizar template radar en `generate.js`, agregar JS**
+
+```javascript
+// En cada lead:
+1. ⭐ clickeable (favorito/desfavorito)
+2. Guardar en localStorage: { profession, name, email, phone, city, timestamp }
+3. Panel "Mis favoritos" debajo de búsqueda
+   - Mostrar últimos 3 favoritos de esta profesión
+   - Botón "Ver todos los favoritos" → modal
+4. Contador en header ("3 favoritos guardados")
+5. Toast notification al agregar/quitar
+```
+
+### 3.3 Copy-to-clipboard mejorado
+**Archivos: template radar en `generate.js`**
+
+```javascript
+// En email/teléfono de cada lead:
+1. Hover tooltip "Click para copiar"
+2. Al copiar: toast "✓ Copiado: email@example.com"
+3. Navegador fallback si no hay Clipboard API
+```
+
+### 3.4 Historial de búsquedas
+**Archivos: template radar en `generate.js`**
+
+```javascript
+// Bajo input "Ciudad":
+1. Mostrar últimas 5 ciudades buscadas
+2. Botones quick-action para re-buscar
+3. Almacenado en localStorage
+4. Limpiar histórico (botón X)
+```
+
+### 3.5 Exportar resultados a CSV
+**Archivos: template radar en `generate.js`**
+
+```javascript
+// Botón "Descargar CSV" en panel de resultados
+- Genera CSV: nombre, email, teléfono, ciudad, score, fecha
+- Incluye nombre del radar y fecha en filename
+```
+
+**Verificación:**
+```bash
+# Abrir cada radar y probar:
+# 1. Marcar 2-3 favoritos
+# 2. Buscar ciudad, verificar historial
+# 3. Copy email → verificar clipboard
+# 4. Exportar CSV → descargar archivo válido
+# 5. Abrir favoritos → verificar persistencia localStorage
+```
+
+---
+
+## FASE 4: DISEÑO (Polish)
+**Duración estimada: 6-8 horas**
+
+### 4.1 Dark/Light Mode Toggle Persistente
+**Archivos: `styles.css`, template en `generate.js`, `index.html` template**
+
+```javascript
+// Agregar script inline en <head> (antes de CSS):
+const theme = localStorage.getItem('theme') || 'auto';
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+const isDark = theme === 'auto' ? prefersDark : theme === 'dark';
+document.documentElement.classList.toggle('dark-mode', isDark);
+
+// Toggle button en header (☀️/🌙)
+- Click → cicla: auto → light → dark → auto
+- Almacena en localStorage
+- Transición suave 0.3s
+```
+
+**Cambios en CSS:**
+- Mover `:root` variables a `html.dark-mode` y `html.light-mode`
+- Agregar transición suave a background, colors
+- Optimizar contraste en ambos modos
+
+### 4.2 Loading Spinner Animado
+**Archivos: `styles.css`, JavaScript en radares**
+
+```css
+/* Nuevo spinner CSS */
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.spinner { animation: spin 1s linear infinite; }
+```
+
+```javascript
+// En botón "Generar leads" al buscar:
+btn.innerHTML = '<span class="spinner">⏳</span> Buscando…';
+```
+
+### 4.3 Stagger Animation en Resultados
+**Archivos: `styles.css`, JavaScript render() en radares**
+
+```javascript
+// Cada lead aparece con delay progresivo:
+leads.map((l, i) => {
+  const html = '<div class="lead" style="animation-delay: ' + (i * 100) + 'ms;">' + ...
+})
+```
+
+```css
+/* En styles.css */
+.lead { animation: slideIn 0.4s ease 200ms both; }
+```
+
+### 4.4 Validación Visual en Inputs
+**Archivos: `styles.css`, JavaScript radares**
+
+```javascript
+// Feedback en tiempo real:
+- Input válido: borde verde cuando blur
+- Input vacío/inválido: borde rojo
+- Ciudad no encontrada: tooltip rojo
+```
+
+**Verificación:**
+```bash
+# Abrir navegador:
+1. Toggle dark/light mode → verifica persistencia localStorage
+2. Scrollear resultados → verifica stagger animation
+3. Ingresar ciudad inválida → verifica validación visual
+4. Hover en email → verifica tooltip
+```
+
+---
+
+## FASE 5: INFRAESTRUCTURA (Automatización)
+**Duración estimada: 6-8 horas**
+
+### 5.1 Crear GitHub Actions CI/CD
+**Archivo: crear `.github/workflows/build-deploy.yml`**
+
+```yaml
+name: Build & Deploy
+on:
+  push:
+    branches: [main, claude/**]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - run: npm ci
+      - run: node validate.js        # Validar professions.json
+      - run: node generate.js        # Generar radares
+      - run: npm test                # Tests básicos
+      - run: npm run screenshot      # Screenshots automáticos (opcional)
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+```
+
+### 5.2 Mejorar serve.js (caching + compresión)
+**Archivo: `serve.js`**
+
+```javascript
+// Agregar:
+1. Cache headers: Cache-Control: public, max-age=3600
+2. Compresión gzip para CSS/JS
+3. Logging de requests (opcional)
+4. MIME types correctos (text/html, text/css, etc)
+```
+
+### 5.3 Crear GitHub Pages Config
+**Archivo: crear `.nojekyll` (archivo vacío)**
+- Indica a GitHub Pages que sirva archivos como-están
+- Evita procesamiento Jekyll innecesario
+
+### 5.4 Deploy a Cloudflare Pages (alternativa/complemento)
+**Configuración manual en cloudflare.com:**
+- Conectar repo GitHub
+- Build command: `node generate.js`
+- Publish directory: `.` (raíz)
+- Configurar redirects (opcional): `/` → `/index.html`
+
+### 5.5 Minificación CSS/JS (opcional pero recomendado)
+**Archivos: agregar `cssnano` y `terser` a package.json**
+
+```bash
+npm install --save-dev cssnano terser
+# Scripts en package.json:
+"build:prod": "cssnano styles.css -o styles.min.css && terser screenshot.js -o screenshot.min.js"
+```
+
+**Verificación:**
+```bash
+# Push a main branch
+git push origin main
+
+# Verificar en GitHub:
+# 1. Actions corre workflow
+# 2. Todos los steps ✓ pasan
+# 3. GitHub Pages despliega
+# 4. Sitio disponible en github.io/radares-profesion
+
+# Opcional Cloudflare:
+# 1. Sitio desplegado en cloudflare.com
+# 2. SSL automático
+# 3. CDN global
+```
+
+---
+
+## 📊 Resumen de Cambios por Fase
+
+| Fase | Archivos | Cambios | Tests | Tiempo |
+|------|----------|---------|-------|--------|
+| **1 - Calidad** | validate.js (new), generate.js, test.js (new) | +500 líneas | npm test ✓ | 8-10h |
+| **2 - Datos** | professions.json, generate.js | +30 profesiones, +categorías | npm run generate ✓ | 4-6h |
+| **3 - Funcionalidad** | index.html, radares templates, JS inline | +búsqueda, +favoritos, +export | Manual testing ✓ | 12-16h |
+| **4 - Diseño** | styles.css, radares templates | +toggle dark/light, +animaciones | Browser testing ✓ | 6-8h |
+| **5 - Infraestructura** | .github/workflows/ (new), serve.js, .nojekyll | +CI/CD, +caching, +GitHub Pages | git push ✓ | 6-8h |
+| **TOTAL** | 9 archivos modificados/creados | ~2000 líneas nuevas | Comprehensive | **36-48h** |
+
+---
+
+## 🎯 Verificación End-to-End
+
+**Después de Fase 1:**
+```bash
+npm test                    # ✓ Tests pasan
+node validate.js            # ✓ JSON válido
+node generate.js            # ✓ 22 radares generados sin errores
+```
+
+**Después de Fase 2:**
+```bash
+npm run generate            # ✓ 30 radares generados
+# index.html tiene categorías y tabs visibles
+```
+
+**Después de Fase 3:**
+```bash
+# Abrir http://localhost:8080 en navegador
+- index.html: búsqueda funciona, filtros funcionan
+- radar-agente_inmobiliario.html: favoritos se guardan, CSV se descarga
+- Historial de búsquedas persiste en localStorage
+```
+
+**Después de Fase 4:**
+```bash
+# Navegador:
+- Toggle dark/light mode visible y persistente
+- Resultados aparecen con stagger animation
+- Inputs tienen validación visual
+```
+
+**Después de Fase 5:**
+```bash
+git push origin main        # ✓ Workflow corre automáticamente
+# GitHub Pages despliega    # ✓ Sitio en línea
+# Cloudflare despliega      # ✓ CDN global (opcional)
+```
+
+---
+
+## 📁 Archivos Clave a Modificar/Crear
+
+**Modificar:**
+- `generate.js` - Agregar validación, categorías, templates mejorados
+- `professions.json` - Agregar categoría, 8 nuevas profesiones
+- `styles.css` - Dark/light mode, animaciones mejoradas
+- `serve.js` - Caching, compresión
+- `package.json` - Agregar scripts (test, build:prod)
+
+**Crear:**
+- `validate.js` - Validador de schema
+- `test.js` - Tests básicos
+- `.github/workflows/build-deploy.yml` - CI/CD
+- `.nojekyll` - Config GitHub Pages
+
+---
+
+## ⚙️ Decisiones de Diseño
+
+1. **localStorage sobre servidor** - Favoritos y historial locales, sin backend
+2. **Validación en build time** - Previene deployes con datos inválidos
+3. **CSS variables dinámicas** - Colores por profesión sin hardcode
+4. **GitHub Pages primario, Cloudflare secundario** - Redundancia y CDN
+5. **Tests simples sobre complejos** - MVP de testing, no overkill
+
+---
+
+## 🚀 Próximos Pasos Después del Plan
+
+1. **Fase 1 completada** → Rama `feature/validation`
+2. **Fase 2 completada** → Rama `feature/categories`
+3. **Fase 3 completada** → Rama `feature/search-favorites`
+4. **Fase 4 completada** → Rama `feature/design-polish`
+5. **Fase 5 completada** → PR a main + Deploy
+6. **Bonus futuro**: Estadísticas, búsqueda multi-profesión, panel admin

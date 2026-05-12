@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<title>Ficha de Lead — IWPro</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="styles.css">
+<script>const t=localStorage.getItem('theme')||'auto';const d=window.matchMedia('(prefers-color-scheme:dark)').matches;const isDark=t==='auto'?d:t==='dark';document.documentElement.classList.toggle('dark-mode',isDark);</script>
+<style>
+:root{--c:#3b82f6}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;color:var(--text-muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:1px}
+.field input,.field select,.field textarea{width:100%;background:var(--input-bg);border:1px solid var(--border);color:var(--text);padding:10px;border-radius:6px;font-size:14px;font-family:inherit}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--c)}
+.field textarea{min-height:90px;resize:vertical}
+.field input[readonly]{opacity:0.6;cursor:not-allowed}
+.event{padding:10px 12px;border-left:3px solid var(--c);background:var(--input-bg);margin-bottom:8px;border-radius:0 6px 6px 0}
+.event .ev-date{font-size:11px;color:var(--text-muted)}
+.event .ev-note{font-size:13px;margin-top:4px}
+.event.ev-update{border-left-color:#06b6d4}
+.event.ev-added{border-left-color:#10b981}
+.event.ev-manual{border-left-color:#f59e0b}
+.event.ev-reseen{border-left-color:#94a3b8}
+</style>
+</head>
+<body>
+<header class="radar-header" style="display:flex;justify-content:space-between;align-items:flex-start">
+  <div style="flex:1">
+    <a href="tracker.html" class="back">← Volver al tracker</a>
+    <h1 id="leadName">Cargando…</h1>
+    <p id="leadMeta"></p>
+  </div>
+  <button id="themeToggle" style="background:none;border:none;font-size:24px;cursor:pointer;margin-top:8px">🌙</button>
+</header>
+<main class="radar-main">
+  <div id="content"><div class="empty">Cargando…</div></div>
+</main>
+<footer style="border-top:1px solid var(--border);padding:16px 24px;margin-top:40px;display:flex;justify-content:space-between;align-items:center;gap:24px;font-size:13px;color:var(--text-muted)"><span>Inmoworking Pro · Radares Especializados</span><span style="display:flex;gap:16px"><a href="privacy.html" style="color:var(--accent);text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:var(--accent);text-decoration:none">Cookies</a></span></footer>
+<script>
+function getTracker(){ return JSON.parse(localStorage.getItem('iwp_tracker')||'{}'); }
+function saveTracker(t){ localStorage.setItem('iwp_tracker', JSON.stringify(t)); }
+function escapeH(s){return String(s||'').replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");}
+function showToast(msg){
+  const t=document.createElement('div');
+  t.style.cssText='position:fixed;bottom:20px;right:20px;background:#1e293b;color:#f0f4f8;padding:12px 16px;border-radius:8px;font-size:13px;z-index:9999;border:1px solid #333';
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2500);
+}
+
+const urlParams = new URLSearchParams(window.location.search);
+const id = urlParams.get('id');
+
+function renderEvents(){
+  const tracker = getTracker();
+  const lead = tracker[id];
+  if(!lead) return;
+  const events = (lead.events||[]).slice().reverse();
+  const html = events.length
+    ? events.map(e => '<div class="event ev-'+escapeH(e.type)+'"><div class="ev-date">'+new Date(e.date).toLocaleString()+' · '+escapeH(e.type)+'</div><div class="ev-note">'+escapeH(e.note)+'</div></div>').join('')
+    : '<div style="color:var(--text-muted);text-align:center;padding:14px">Sin eventos todavía</div>';
+  const el = document.getElementById('eventsList');
+  if(el) el.innerHTML = html;
+}
+
+function render(){
+  const tracker = getTracker();
+  const lead = tracker[id];
+  if(!lead){
+    document.getElementById('content').innerHTML = '<section class="panel"><div class="empty">Lead no encontrado en el tracker.<br><br>Para verlo aquí, primero pulsa <b>"Guardar en tracker"</b> desde el radar.</div></section>';
+    document.getElementById('leadName').textContent = 'Lead no encontrado';
+    return;
+  }
+  document.getElementById('leadName').textContent = lead.name || '(sin nombre)';
+  document.getElementById('leadMeta').textContent = (lead.professionLabel||lead.profession) + ' · Añadido ' + new Date(lead.added_at).toLocaleDateString();
+  const statuses = ['pendiente','contactado','interesado','cliente','descartado'];
+  document.getElementById('content').innerHTML =
+    '<section class="panel"><h2>Información de contacto</h2>'
+    +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">'
+    +'<div class="field"><label>Nombre</label><input id="f-name" type="text" value="'+escapeH(lead.name)+'"></div>'
+    +'<div class="field"><label>Teléfono</label><input id="f-phone" type="tel" value="'+escapeH(lead.phone)+'"></div>'
+    +'<div class="field"><label>Email</label><input id="f-email" type="email" value="'+escapeH(lead.email)+'"></div>'
+    +'<div class="field"><label>Web</label><input id="f-website" type="url" value="'+escapeH(lead.website)+'"></div>'
+    +'<div class="field"><label>Ciudad</label><input id="f-city" type="text" value="'+escapeH(lead.city)+'"></div>'
+    +'<div class="field"><label>Dirección</label><input id="f-address" type="text" value="'+escapeH(lead.address||'')+'"></div>'
+    +'<div class="field"><label>Score (radar)</label><input type="text" value="'+escapeH(lead.score)+'" readonly></div>'
+    +'<div class="field"><label>Rating (reseñas)</label><input type="text" value="'+escapeH(lead.rating?(lead.rating+(lead.reviews_count?' ('+lead.reviews_count+' reseñas)':'')):'')+'" readonly></div>'
+    +'</div>'
+    +'<div style="margin-top:6px"><a href="https://www.google.com/search?q='+encodeURIComponent((lead.name||'')+' '+(lead.city||''))+'" target="_blank" style="color:var(--c);font-size:13px;text-decoration:none">🔍 Buscar en Google</a></div>'
+    +'</section>'
+    +'<section class="panel"><h2>Seguimiento</h2>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">'
+    +'<div class="field"><label>Estado</label><select id="f-status">'
+    + statuses.map(s=>'<option value="'+s+'"'+(lead.status===s?' selected':'')+'>'+s+'</option>').join('')
+    +'</select></div>'
+    +'<div class="field"><label>Fecha de contacto</label><input id="f-contact" type="date" value="'+escapeH(lead.contact_date||'')+'"></div>'
+    +'</div>'
+    +'<div class="field"><label>Notas de seguimiento</label><textarea id="f-notes">'+escapeH(lead.tracker_notes||'')+'</textarea></div>'
+    +'<button id="saveBtn" style="background:linear-gradient(135deg,var(--c) 0%,#0284c7 100%);border:0;color:white;padding:12px 22px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;font-family:inherit">💾 Guardar cambios</button>'
+    +'</section>'
+    +'<section class="panel"><h2>Historial de eventos</h2>'
+    +'<div style="display:flex;gap:8px;margin-bottom:14px">'
+    +'<input id="newEvent" type="text" placeholder="Añadir entrada al historial (ej: llamé, no contesta; cliente confirmó reunión…)" style="flex:1;background:var(--input-bg);border:1px solid var(--border);padding:10px;border-radius:6px;color:var(--text);font-family:inherit">'
+    +'<button id="addEventBtn" style="background:var(--c);border:0;color:white;padding:10px 18px;border-radius:6px;cursor:pointer;font-family:inherit;font-weight:600">+ Añadir</button>'
+    +'</div>'
+    +'<div id="eventsList"></div>'
+    +'</section>'
+    +'<section class="panel"><h2>Datos completos del backend</h2>'
+    +'<details><summary style="cursor:pointer;font-size:13px;color:var(--text-muted)">Ver raw_data</summary>'
+    +'<pre style="background:var(--input-bg);padding:14px;border-radius:6px;font-size:12px;overflow-x:auto;max-height:400px;margin-top:8px">'+escapeH(JSON.stringify(lead.raw_data||{},null,2))+'</pre>'
+    +'</details>'
+    +'</section>'
+    +'<section class="panel" style="border-color:rgba(239,68,68,0.3)"><h2 style="color:#fca5a5">Zona de peligro</h2>'
+    +'<button id="deleteBtn" style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);color:#fca5a5;padding:10px 18px;border-radius:6px;cursor:pointer;font-family:inherit;font-weight:600">🗑 Eliminar del tracker</button>'
+    +'</section>';
+  renderEvents();
+  document.getElementById('saveBtn').addEventListener('click', saveChanges);
+  document.getElementById('addEventBtn').addEventListener('click', addEvent);
+  document.getElementById('deleteBtn').addEventListener('click', deleteLead);
+  document.getElementById('newEvent').addEventListener('keydown', e => { if(e.key==='Enter') addEvent(); });
+}
+
+function saveChanges(){
+  const tracker = getTracker();
+  const lead = tracker[id];
+  const updates = {
+    name: document.getElementById('f-name').value,
+    phone: document.getElementById('f-phone').value,
+    email: document.getElementById('f-email').value,
+    website: document.getElementById('f-website').value,
+    city: document.getElementById('f-city').value,
+    address: document.getElementById('f-address').value,
+    status: document.getElementById('f-status').value,
+    contact_date: document.getElementById('f-contact').value,
+    tracker_notes: document.getElementById('f-notes').value
+  };
+  let changed = [];
+  for(const k of Object.keys(updates)){
+    if((lead[k]||'') !== updates[k]){
+      changed.push(k+': '+(lead[k]||'∅')+' → '+(updates[k]||'∅'));
+      lead[k] = updates[k];
+    }
+  }
+  if(changed.length){
+    lead.events = lead.events || [];
+    lead.events.push({date:new Date().toISOString(),type:'update',note:changed.join(', ')});
+    saveTracker(tracker);
+    document.getElementById('leadName').textContent = lead.name || '(sin nombre)';
+    showToast('✓ Guardado ('+changed.length+' campos)');
+    renderEvents();
+  } else {
+    showToast('Sin cambios');
+  }
+}
+
+function addEvent(){
+  const inp = document.getElementById('newEvent');
+  const note = inp.value.trim();
+  if(!note) return;
+  const tracker = getTracker();
+  tracker[id].events = tracker[id].events || [];
+  tracker[id].events.push({date:new Date().toISOString(),type:'manual',note});
+  saveTracker(tracker);
+  inp.value = '';
+  renderEvents();
+  showToast('✓ Evento añadido');
+}
+
+function deleteLead(){
+  if(!confirm('¿Eliminar este lead del tracker? No se puede deshacer.')) return;
+  const tracker = getTracker();
+  delete tracker[id];
+  saveTracker(tracker);
+  window.location.href = 'tracker.html';
+}
+
+render();
+
+const themeToggle = document.getElementById('themeToggle');
+function updateThemeBtn(){
+  const t = localStorage.getItem('theme') || 'auto';
+  themeToggle.textContent = t === 'dark' ? '☀️' : t === 'light' ? '🌙' : '⚪';
+}
+updateThemeBtn();
+themeToggle.addEventListener('click', () => {
+  const t = localStorage.getItem('theme') || 'auto';
+  const next = t === 'auto' ? 'light' : t === 'light' ? 'dark' : 'auto';
+  localStorage.setItem('theme', next);
+  const d = window.matchMedia('(prefers-color-scheme:dark)').matches;
+  const isDark = next==='auto'?d:next==='dark';
+  document.documentElement.classList.toggle('dark-mode', isDark);
+  updateThemeBtn();
+});
+</script>
+</body></html>

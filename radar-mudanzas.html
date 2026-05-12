@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Radar Mudanzas — IWPro</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="styles.css">
+<style>
+:root{--c:#be185d}
+</style>
+</head>
+<body>
+<header class="radar-header" style="display:flex;justify-content:space-between;align-items:flex-start">
+  <div style="flex:1">
+    <a href="index.html" class="back">← Todos los radares</a>
+    <div class="icon">📦</div>
+    <h1>Radar Mudanzas</h1>
+    <p>Captación de leads especializada para mudanzas</p>
+  </div>
+  <button id="radarThemeToggle" style="background:none;border:none;font-size:24px;cursor:pointer;margin-top:8px">🌙</button>
+</header>
+<main class="radar-main">
+  <div id="fileWarn" class="file-warn" style="display:none">
+  ⚠ Estás abriendo este radar como archivo local. El backend rechaza CORS desde <code>file://</code>.<br>
+  Ejecuta <code>node serve.js</code> en <code>C:\Radares-Profesion</code> y abre <code>http://localhost:8080</code>.
+  </div>
+  <script>if(location.protocol==='file:')document.getElementById('fileWarn').style.display='block';</script>
+  <section class="panel">
+    <h2>Buscar leads</h2>
+    <div class="row">
+      <input id="city" type="text" placeholder="Ciudad (ej. Madrid)" value="Madrid">
+      <input id="count" type="number" min="1" max="50" value="10" style="max-width:90px">
+      <button id="go">Generar leads</button>
+    </div>
+    <div id="history" style="margin-top:8px;font-size:12px;color:#94a3b8"></div>
+    <div class="row" style="margin-top:10px">
+      <input id="email" type="email" placeholder="Email del CRM" autocomplete="username">
+      <input id="pass" type="password" placeholder="Contraseña" autocomplete="current-password">
+      <button id="login" type="button" style="background:#334155">Iniciar sesión</button>
+    </div>
+    <div id="authStatus" style="font-size:12px;color:#94a3b8;margin-top:6px"></div>
+    <div id="err" class="error"></div>
+    <div class="meta" style="margin-top:14px">
+      <span>Profesión: <b>Mudanzas</b></span>
+      <span>Multiplicador score: <b>×1.3</b></span>
+      <span>Query: <b>empresas de mudanzas</b></span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Servicios cubiertos</h2>
+    <ul class="services"><li>Mudanzas locales</li><li>Mudanzas nacionales</li><li>Mudanzas internacionales</li><li>Embalaje profesional</li><li>Guardamuebles</li><li>Mudanzas de oficinas</li><li>Transporte de pianos y obras de arte</li></ul>
+  </section>
+
+  <section class="panel">
+    <h2>Fuentes activas</h2>
+    <p style="margin:0;color:#cbd5e1;font-size:13px"><code>borme_cambios_domicilio</code></p>
+  </section>
+
+  <section class="panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2 style="margin:0">Resultados</h2>
+      <button id="csvBtn" style="background:#334155;padding:8px 12px;border:1px solid #475569;border-radius:6px;color:#f0f4f8;font-size:12px;cursor:pointer;display:none">📥 Descargar CSV</button>
+    </div>
+    <div id="results"><div class="empty">Pulsa "Generar leads" para empezar</div></div>
+  </section>
+</main>
+<footer style="border-top:1px solid #333;padding:12px;margin-top:24px;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:12px;color:#94a3b8"><span>Inmoworking Pro · Mudanzas</span><span style="display:flex;gap:12px"><a href="privacy.html" style="color:#60a5fa;text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:#60a5fa;text-decoration:none">Cookies</a></span></footer>
+<script>
+const PROFESSION = "mudanzas";
+const API_BASE = "https://crm-agente-api.onrender.com";
+const $ = sel => document.querySelector(sel);
+const btn = $('#go'), errBox = $('#err'), out = $('#results');
+
+function token(){ return localStorage.getItem('iwp_token') || localStorage.getItem('iwpro_token') || ''; }
+function setTok(v){ localStorage.setItem('iwp_token', v); localStorage.setItem('iwpro_token', v); }
+function clearTok(){ localStorage.removeItem('iwp_token'); localStorage.removeItem('iwpro_token'); }
+
+const authStatus = $('#authStatus');
+function refreshAuthUi(){
+  if(token()){ authStatus.innerHTML = '✅ Sesión activa <a href="#" id="logout" style="color:#fca5a5;margin-left:8px">cerrar sesión</a>'; const lo = document.getElementById('logout'); if(lo) lo.onclick=(e)=>{e.preventDefault();clearTok();refreshAuthUi();}; }
+  else { authStatus.textContent = 'No hay sesión — introduce email y contraseña del CRM'; }
+}
+refreshAuthUi();
+$('#email').value = localStorage.getItem('iwp_email') || '';
+
+async function doLogin(){
+  const email = $('#email').value.trim();
+  const password = $('#pass').value;
+  if(!email || !password){ authStatus.textContent='Faltan email o contraseña'; return; }
+  authStatus.textContent='Iniciando sesión…';
+  try{
+    const r = await fetch(API_BASE + '/auth/login', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ email, password })
+    });
+    const data = await r.json().catch(()=>({error:'respuesta no-JSON'}));
+    if(!r.ok) throw new Error(data.error || ('HTTP '+r.status));
+    if(!data.token) throw new Error('Login sin token en respuesta');
+    setTok(data.token);
+    localStorage.setItem('iwp_email', email);
+    $('#pass').value='';
+    refreshAuthUi();
+  }catch(e){ authStatus.style.color='#fca5a5'; authStatus.textContent='Error: '+e.message; setTimeout(()=>{authStatus.style.color='';refreshAuthUi();},3500); }
+}
+$('#login').addEventListener('click', doLogin);
+$('#pass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+
+async function generate(){
+  errBox.textContent = '';
+  const city = $('#city').value.trim();
+  const count = parseInt($('#count').value,10) || 10;
+  const cityInput = $('#city');
+  if(!city){ errBox.textContent='Introduce una ciudad'; cityInput.classList.add('input-invalid'); setTimeout(()=>cityInput.classList.remove('input-invalid'),2500); return; }
+  cityInput.classList.remove('input-invalid'); cityInput.classList.add('input-valid');
+  if(!token() && $('#email').value.trim() && $('#pass').value){
+    await doLogin();
+    if(!token()) return;
+  }
+  btn.disabled = true; btn.innerHTML = '<span class="spinner">⏳</span> Buscando…';
+  out.innerHTML = '<div class="empty">Consultando fuentes…</div>';
+  document.getElementById('csvBtn').style.display = 'none';
+  const hist = JSON.parse(localStorage.getItem('iwp_history')||'[]');
+  if(!hist.includes(city)){ hist.unshift(city); hist.splice(5); localStorage.setItem('iwp_history', JSON.stringify(hist)); }
+  updateHistory();
+  try{
+    const r = await fetch(API_BASE + '/api/radar/admin/generate', {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        ...(token() ? {'Authorization':'Bearer '+token()} : {})
+      },
+      body: JSON.stringify({ profession: PROFESSION, city, count })
+    });
+    const data = await r.json().catch(()=>({error:'respuesta no-JSON'}));
+    if(!r.ok){ throw new Error(data.error || ('HTTP '+r.status)); }
+    window.lastData = data;
+    render(data);
+    if(data.leads && data.leads.length > 0) document.getElementById('csvBtn').style.display = 'block';
+  }catch(e){
+    const tip = location.protocol === 'file:' ? ' — ABRE ESTA PÁGINA VÍA http://localhost (ejecuta: node serve.js)' : ' — revisa token o conexión';
+    errBox.textContent = 'Error: ' + e.message + tip;
+    out.innerHTML = '<div class="empty">Sin resultados</div>';
+  }finally{
+    btn.disabled = false; btn.textContent = 'Generar leads';
+  }
+}
+function updateHistory(){
+  const hist = JSON.parse(localStorage.getItem('iwp_history')||'[]');
+  const histEl = document.getElementById('history');
+  if(hist.length === 0){ histEl.innerHTML = ''; return; }
+  histEl.innerHTML = 'Últimas: ' + hist.map(c => '<button style="background:none;border:none;color:#3b82f6;cursor:pointer;text-decoration:underline;font-size:12px;padding:0;margin-right:8px" data-city="'+c+'">'+c+'</button>').join('');
+  histEl.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', e => { $('#city').value = btn.dataset.city; generate(); });
+  });
+}
+$('#city').addEventListener('input', () => {
+  const city = $('#city').value.trim();
+  if(city.length > 0){ $('#city').classList.add('input-valid'); $('#city').classList.remove('input-invalid'); }
+  else{ $('#city').classList.remove('input-valid'); }
+});
+document.getElementById('csvBtn').addEventListener('click', () => {
+  const data = window.lastData || {};
+  const leads = data.leads || [];
+  if(!leads.length){ showToast('Sin leads para exportar'); return; }
+  const rows = [['Nombre', 'Email', 'Teléfono', 'Ciudad', 'Score', 'Fecha']];
+  leads.forEach(l => {
+    const raw = l.raw_data || {};
+    rows.push([l.name || '', l.email || '', l.phone || '', raw.city || '', raw.priority_score || l.priority_score || '', new Date().toLocaleDateString()]);
+  });
+  const csv = rows.map(r => r.map(c => '"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.setAttribute('href', url);
+  link.setAttribute('download', PROFESSION + '-' + new Date().toISOString().split('T')[0] + '.csv');
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  showToast('✓ CSV descargado');
+});
+updateHistory();
+
+function extractLeadFields(l){
+  const raw = l.raw_data || {};
+  return {
+    name: l.name || raw.name || '(sin nombre)',
+    phone: l.phone || raw.phone || raw.telephone || raw.international_phone_number || '',
+    email: l.email || raw.email || '',
+    website: l.website || raw.website || raw.url || raw.site || '',
+    city: l.city || raw.city || raw.locality || '',
+    address: raw.address || raw.formatted_address || raw.vicinity || '',
+    rating: raw.rating || '',
+    reviews_count: raw.user_ratings_total || raw.reviews_count || '',
+    score: raw.priority_score || l.priority_score || '',
+    notes: l.notes || raw.notes || ''
+  };
+}
+function makeLeadId(f){
+  return btoa(unescape(encodeURIComponent(PROFESSION + '|' + f.name + '|' + f.phone))).replace(/[=+/]/g,'_');
+}
+window.currentLeads = {};
+function render(data){
+  const allLeads = data.leads || [];
+  const withPhone = allLeads.filter(l => { const f = extractLeadFields(l); return !!f.phone; });
+  const skipped = allLeads.length - withPhone.length;
+  if(!withPhone.length){
+    out.innerHTML = '<div class="empty">No se encontraron leads con teléfono'+(skipped?' ('+skipped+' descartados sin teléfono)':'')+(data.message ? '<br><span style="font-size:12px">'+escapeH(data.message)+'</span>' : '')+'</div>';
+    return;
+  }
+  window.currentLeads = {};
+  const header = skipped ? '<div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">📊 '+withPhone.length+' leads con teléfono ('+skipped+' sin teléfono descartados)</div>' : '';
+  out.innerHTML = header + withPhone.map((l, i) => {
+    const f = extractLeadFields(l);
+    const id = makeLeadId(f);
+    window.currentLeads[id] = { raw: l, fields: f };
+    const isPremium = f.email && f.website;
+    return '<div class="lead" data-lead-id="'+id+'" style="animation-delay:'+(i*50)+'ms">'
+      +'<div class="lead-header" style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;cursor:pointer">'
+      +'<div style="flex:1">'
+      +'<h3 style="margin:0">'
+      + (isPremium?'<span title="Lead premium (web+email)" style="margin-right:6px">⭐</span>':'')
+      + escapeH(f.name)
+      + (f.score?'<span class="score">'+f.score+'</span>':'')
+      + (f.rating?'<span style="margin-left:8px;font-size:12px;color:#f59e0b">★ '+f.rating+(f.reviews_count?' ('+f.reviews_count+')':'')+'</span>':'')
+      +'</h3>'
+      +'</div>'
+      +'<span class="lead-toggle" style="font-size:14px;color:var(--text-muted);user-select:none">▼</span>'
+      +'</div>'
+      +'<div class="l-meta" style="margin-top:6px">'
+      + '<span class="copyable" data-copy="'+escapeH(f.phone)+'" style="cursor:pointer;border-bottom:1px dashed #666;padding:0 2px" title="Click para copiar">📞 '+escapeH(f.phone)+'</span>'
+      + (f.email?' · <span class="copyable" data-copy="'+escapeH(f.email)+'" style="cursor:pointer;border-bottom:1px dashed #666;padding:0 2px" title="Click para copiar">✉ '+escapeH(f.email)+'</span>':'')
+      + (f.website?' · <a href="'+escapeH(f.website)+'" target="_blank" rel="noopener" style="color:var(--c);text-decoration:none" onclick="event.stopPropagation()">🌐 Web</a>':'')
+      + (f.city?' · 📍 '+escapeH(f.city):'')
+      +'</div>'
+      +'<div class="lead-details" style="display:none;margin-top:12px;padding-top:12px;border-top:1px dashed var(--border)">'
+      + (f.address?'<div style="margin-bottom:8px;font-size:13px"><b>Dirección:</b> '+escapeH(f.address)+'</div>':'')
+      + (f.notes?'<div style="margin-bottom:8px;font-size:13px"><b>Notas:</b> '+escapeH(f.notes)+'</div>':'')
+      +'<details style="margin:10px 0"><summary style="cursor:pointer;font-size:12px;color:var(--text-muted)">Ver datos crudos del backend</summary>'
+      +'<pre style="background:var(--input-bg);padding:10px;border-radius:6px;font-size:11px;overflow-x:auto;max-height:240px;margin-top:6px">'+escapeH(JSON.stringify(l,null,2))+'</pre>'
+      +'</details>'
+      +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">'
+      +'<button class="track-btn" data-lead-id="'+id+'" style="background:var(--c);border:0;color:white;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600">💾 Guardar en tracker</button>'
+      +'<button class="open-lead" data-lead-id="'+id+'" style="background:var(--input-bg);border:1px solid var(--border);color:var(--text);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px">📋 Ver ficha completa</button>'
+      +'<button class="fav-btn" data-lead-id="'+id+'" style="background:var(--input-bg);border:1px solid var(--border);color:var(--text);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px">☆ Favorito</button>'
+      +'</div>'
+      +'</div>'
+      +'</div>';
+  }).join('');
+  setupRadarListeners();
+}
+function saveToTracker(id){
+  const data = window.currentLeads[id];
+  if(!data) return null;
+  const f = data.fields;
+  const tracker = JSON.parse(localStorage.getItem('iwp_tracker')||'{}');
+  if(!tracker[id]){
+    tracker[id] = {
+      id: id,
+      profession: PROFESSION,
+      professionLabel: document.title.replace(/^Radar /,'').replace(/ — IWPro$/,''),
+      name: f.name, phone: f.phone, email: f.email, website: f.website,
+      city: f.city, address: f.address, score: f.score,
+      rating: f.rating, reviews_count: f.reviews_count, notes: f.notes,
+      raw_data: data.raw.raw_data || {},
+      status: 'pendiente',
+      contact_date: '',
+      tracker_notes: '',
+      events: [{date:new Date().toISOString(),type:'added',note:'Añadido desde radar '+PROFESSION}],
+      added_at: new Date().toISOString()
+    };
+  } else {
+    tracker[id].events = tracker[id].events || [];
+    tracker[id].events.push({date:new Date().toISOString(),type:'reseen',note:'Re-visto en radar'});
+  }
+  localStorage.setItem('iwp_tracker', JSON.stringify(tracker));
+  return tracker[id];
+}
+function setupRadarListeners(){
+  document.querySelectorAll('.lead-header').forEach(h=>{
+    h.addEventListener('click',e=>{
+      const lead = h.closest('.lead');
+      const det = lead.querySelector('.lead-details');
+      const tog = lead.querySelector('.lead-toggle');
+      const open = det.style.display !== 'none';
+      det.style.display = open ? 'none' : 'block';
+      tog.textContent = open ? '▼' : '▲';
+    });
+  });
+  document.querySelectorAll('.track-btn').forEach(btn=>{
+    const id = btn.dataset.leadId;
+    const tracker = JSON.parse(localStorage.getItem('iwp_tracker')||'{}');
+    if(tracker[id]) btn.textContent = '✓ En tracker';
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      saveToTracker(id);
+      btn.textContent = '✓ En tracker';
+      showToast('✓ Guardado en tracker');
+    });
+  });
+  document.querySelectorAll('.open-lead').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      const id = btn.dataset.leadId;
+      saveToTracker(id);
+      window.open('lead.html?id='+id, '_blank');
+    });
+  });
+  document.querySelectorAll('.fav-btn').forEach(btn=>{
+    const id = btn.dataset.leadId;
+    const favs = JSON.parse(localStorage.getItem('iwp_favs')||'{}');
+    if(favs[id]) btn.textContent='⭐ Favorito';
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      const favs = JSON.parse(localStorage.getItem('iwp_favs')||'{}');
+      if(favs[id]){ delete favs[id]; btn.textContent='☆ Favorito'; showToast('✓ Eliminado de favoritos'); }
+      else{ const data = window.currentLeads[id]; if(data){ favs[id]={...data.fields,prof:PROFESSION,date:new Date().toISOString()}; btn.textContent='⭐ Favorito'; showToast('✓ Favorito guardado'); } }
+      localStorage.setItem('iwp_favs', JSON.stringify(favs));
+    });
+  });
+  document.querySelectorAll('.copyable').forEach(el=>{
+    el.addEventListener('click',e=>{
+      e.stopPropagation();
+      const text = el.dataset.copy || el.textContent;
+      navigator.clipboard.writeText(text).then(()=>showToast('✓ Copiado: '+text)).catch(()=>showToast('❌ Error'));
+    });
+  });
+}
+function showToast(msg){
+  const t=document.createElement('div');
+  t.style.cssText='position:fixed;bottom:20px;right:20px;background:#1e293b;color:#f0f4f8;padding:12px 16px;border-radius:8px;font-size:13px;z-index:9999;border:1px solid #333;animation:slideIn 0.3s ease';
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2500);
+}
+function escapeH(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");}
+btn.addEventListener('click', generate);
+$('#city').addEventListener('keydown', e=>{ if(e.key==='Enter') generate(); });
+</script>
+</body>
+</html>

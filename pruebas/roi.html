@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>ROI Dashboard — NEXOLEADS PRO</title>
+    <style>
+        :root {
+            --bg: #020617;
+            --accent: #0ea5e9;
+            --success: #10b981;
+            --card-bg: rgba(15, 23, 42, 0.6);
+            --border: rgba(255, 255, 255, 0.06);
+        }
+
+        body {
+            background: var(--bg);
+            color: #f8fafc;
+            font-family: 'Inter', system-ui, sans-serif;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .dashboard-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Top Bar */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 50px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--card-bg);
+            padding: 8px 20px;
+            border-radius: 100px;
+            border: 1px solid var(--border);
+        }
+
+        /* KPI Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .kpi-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 2px;
+            background: var(--accent);
+            opacity: 0.3;
+        }
+
+        .kpi-label { color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+        .kpi-value { display: block; font-size: 2rem; font-weight: 800; margin-top: 10px; }
+        .kpi-trend { color: var(--success); font-size: 0.8rem; font-weight: 600; }
+
+        /* Main View */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .chart-container {
+            background: var(--card-bg);
+            border-radius: 32px;
+            border: 1px solid var(--border);
+            padding: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        /* Activity List */
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.3s;
+        }
+
+        .activity-item:hover { background: rgba(255,255,255,0.02); }
+
+        .profession-icon {
+            width: 45px;
+            height: 45px;
+            background: rgba(14, 165, 233, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .btn-report {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-wrapper">
+        <div class="top-nav">
+            <div>
+                <h1 style="margin:0; font-size: 1.5rem;">NEXOLEADS <span style="font-weight:200; color:#64748b;">/ Analytics</span></h1>
+            </div>
+            <div class="user-profile">
+                <span style="font-size: 0.9rem; font-weight: 600;">Agente Inmobiliario Pro</span>
+                <div style="width: 32px; height: 32px; background: #0ea5e9; border-radius: 50%;"></div>
+            </div>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <span class="kpi-label">Leads Captados</span>
+                <span class="kpi-value">1.284</span>
+                <span class="kpi-trend">↑ 12% este mes</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">Tasa de Cierre</span>
+                <span class="kpi-value">24.8%</span>
+                <span class="kpi-trend">Basado en Radar Pro</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">ROI Estimado</span>
+                <span class="kpi-value">€42.5k</span>
+                <span class="kpi-trend" style="color:var(--accent)">Score Avg: ×1.7</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">Fuentes Activas</span>
+                <span class="kpi-value">3</span>
+                <span class="kpi-trend">BOE, BORME, Google</span>
+            </div>
+        </div>
+
+        <div class="main-layout">
+            <div class="chart-container">
+                <div class="section-header">
+                    <h2 style="margin:0; font-size: 1.2rem;">Rendimiento del Radar</h2>
+                    <button class="btn-report">Exportar Informe</button>
+                </div>
+                <!-- Simulación de gráfico -->
+                <div style="height: 300px; width: 100%; border-bottom: 1px solid var(--border); display: flex; align-items: flex-end; gap: 20px;">
+                    <div style="height: 40%; flex:1; background: linear-gradient(to top, var(--accent), transparent); border-radius: 8px 8px 0 0; opacity: 0.5;"></div>
+                    <div style="height: 70%; flex:1; background: linear-gradient(to top, var(--accent), transparent); border-radius: 8px 8px 0 0;"></div>
+                    <div style="height: 55%; flex:1; background: linear-gradient(to top, var(--accent), transparent); border-radius: 8px 8px 0 0; opacity: 0.7;"></div>
+                    <div style="height: 90%; flex:1; background: linear-gradient(to top, var(--accent), transparent); border-radius: 8px 8px 0 0;"></div>
+                </div>
+                <p style="color: #64748b; font-size: 0.8rem; margin-top: 20px;">Análisis de volumen de leads por semana según multiplicador sectorial.</p>
+            </div>
+
+            <div class="chart-container" style="padding: 30px;">
+                <h2 style="margin:0 0 20px; font-size: 1.1rem;">Últimas Conversiones</h2>
+                
+                <div class="activity-item">
+                    <div class="profession-icon">🏠</div>
+                    <div>
+                        <div style="font-weight: 600; font-size: 0.9rem;">Venta Chalet</div>
+                        <div style="font-size: 0.75rem; color: #64748b;">Desbloqueado hace 2h</div>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="profession-icon">🏢</div>
+                    <div>
+                        <div style="font-weight: 600; font-size: 0.9rem;">Admin. Fincas</div>
+                        <div style="font-size: 0.75rem; color: #64748b;">Cambio Admin. BORME[cite: 2]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

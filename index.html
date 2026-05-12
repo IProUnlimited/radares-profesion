@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<title>Radares por Profesión — IWPro</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="styles.css">
+<script>const t=localStorage.getItem('theme')||'auto';const d=window.matchMedia('(prefers-color-scheme:dark)').matches;const isDark=t==='auto'?d:t==='dark';document.documentElement.classList.toggle('dark-mode',isDark);</script>
+</head>
+<body>
+<header style="display:flex;justify-content:space-between;align-items:center">
+  <div>
+    <h1>Radares Especializados por Profesión</h1>
+    <p>30 radares agrupados en 6 categorías · Conectado a CRM Propium</p>
+  </div>
+  <div style="display:flex;gap:12px;align-items:center;height:fit-content">
+    <a href="tracker.html" style="text-decoration:none;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.4);padding:8px 16px;border-radius:8px;color:var(--accent);font-weight:600;font-size:13px">📋 Tracker</a>
+    <button id="themeToggle" style="background:none;border:none;font-size:24px;cursor:pointer">🌙</button>
+  </div>
+</header>
+<main>
+  <section class="search-section">
+    <input type="text" id="searchInput" class="search-input" placeholder="Buscar por profesión, categoría o servicio...">
+    <div class="filters">
+      <select id="categoryFilter" class="filter-select">
+        <option value="">Todas las categorías</option>
+        <option value="Inmobiliario">Inmobiliario</option><option value="Legal & Fiscal">Legal & Fiscal</option><option value="Construcción & Reforma">Construcción & Reforma</option><option value="Servicios Especializados">Servicios Especializados</option><option value="Decoración & Tecnología">Decoración & Tecnología</option><option value="Servicios Básicos">Servicios Básicos</option>
+      </select>
+      <input type="range" id="multiplierFilter" class="filter-range" min="1" max="2" step="0.1" value="2" title="Multiplicador máximo">
+      <span id="multiplierValue" class="filter-value">Todas (×1.0-×2.0)</span>
+      <button id="resetBtn" class="reset-btn">Limpiar filtros</button>
+    </div>
+  </section>
+
+  <div id="results">
+  <section class="category" data-category="Inmobiliario">
+    <h2>Inmobiliario (<span class="cat-count">7</span>)</h2>
+    <div class="grid">
+    <a class="card" href="radar-agente_inmobiliario.html" style="--c:#0ea5e9" data-key="agente_inmobiliario" data-category="Inmobiliario">
+      <div class="ico">🏠</div>
+      <div class="lbl">Agente Inmobiliario</div>
+      <div class="sub">×1.7 · 3 fuentes</div>
+    </a>
+    <a class="card" href="radar-gerente_inmobiliario.html" style="--c:#1d4ed8" data-key="gerente_inmobiliario" data-category="Inmobiliario">
+      <div class="ico">📈</div>
+      <div class="lbl">Gerente Inmobiliario</div>
+      <div class="sub">×1.7 · 1 fuente</div>
+    </a>
+    <a class="card" href="radar-inversor.html" style="--c:#16a34a" data-key="inversor" data-category="Inmobiliario">
+      <div class="ico">💰</div>
+      <div class="lbl">Inversor Inmobiliario</div>
+      <div class="sub">×1.6 · 1 fuente</div>
+    </a>
+    <a class="card" href="radar-administrador_fincas.html" style="--c:#475569" data-key="administrador_fincas" data-category="Inmobiliario">
+      <div class="ico">🏢</div>
+      <div class="lbl">Administrador de Fincas</div>
+      <div class="sub">×1.7 · 1 fuente</div>
+    </a>
+    <a class="card" href="radar-notario.html" style="--c:#92400e" data-key="notario" data-category="Inmobiliario">
+      <div class="ico">📜</div>
+      <div class="lbl">Notaría</div>
+      <div class="sub">×1.5 · 1 fuente</div>
+    </a>
+    <a class="card" href="radar-propietario.html" style="--c:#9333ea" data-key="propietario" data-category="Inmobiliario">
+      <div class="ico">🔑</div>
+      <div class="lbl">Propietario</div>
+      <div class="sub">×1.5 · directorios públicos</div>
+    </a>
+    <a class="card" href="radar-promotor.html" style="--c:#ea580c" data-key="promotor" data-category="Inmobiliario">
+      <div class="ico">🏗️</div>
+      <div class="lbl">Promotor Inmobiliario</div>
+      <div class="sub">×1.7 · directorios públicos</div>
+    </a></div>
+  </section>
+  <section class="category" data-category="Legal & Fiscal">
+    <h2>Legal & Fiscal (<span class="cat-count">5</span>)</h2>
+    <div class="grid">
+    <a class="card" href="radar-abogado.html" style="--c:#0f172a" data-key="abogado" data-category="Legal & Fiscal">
+      <div class="ico">⚖️</div>
+      <div class="lbl">Bufete de Abogados</div>
+      <div class="sub">×1.7 · 2 fuentes</div>
+    </a>
+    <a class="card" href="radar-asesor_financiero.html" style="--c:#059669" data-key="asesor_financiero" data-category="Legal & Fiscal">
+      <div class="ico">💼</div>
+      <div class="lbl">Asesor Financiero</div>
+      <div class="sub">×1.4 · 2 fuentes</div>
+    </a>
+    <a class="card" href="radar-gestor.html" style="--c:#0891b2" data-key="gestor" data-category="Legal & Fiscal">
+      <div class="ico">📋</div>
+      <div class="lbl">Gestoría</div>
+      <div class="sub">×1.5 · 1 fuente</div>
+    </a>
+    <a class="card" href="radar-consultor_rh.html" style="--c:#8b5cf6" data-key="consultor_rh" data-category="Legal & Fiscal">
+      <div class="ico">👥</div>
+      <div class="lbl">Consultoría de Recursos Humanos</div>
+      <div class="sub">×1.4 · directorios públicos</div>
+    </a>
+    <a class="card" href="radar-consultor_ambiental.html" style="--c:#16a34a" data-key="consultor_ambiental" data-category="Legal & Fiscal">
+      <div class="ico">♻️</div>
+      <div class="lbl">Consultoría Ambiental</div>
+      <div class="sub">×1.3 · directorios públicos</div>
+    </a></div>
+  </section>
+  <section class="category" data-category="Construcción & Reforma">
+    <h2>Construcción & Reforma (<span class="cat-count">7</span>)</h2>
+    <div class="grid">
+    <a class="card" href="radar-reformista.html" style="--c:#f59e0b" data-key="reformista" data-category="Construcción & Reforma">
+      <div class="ico">🔨</div>
+      <div class="lbl">Reformas Integrales</div>
+      <div class="sub">×1.4 · 1 fuente</div>
+    </a>
+    <a class="card" href="radar-arquitecto.html" style="--c:#7c3aed" data-key="arquitecto" data-category="Construcción & Reforma">
+      <div class="ico">📐</div>
+      <div class="lbl">Arquitecto</div>
+      <div class="sub">×1.4 · directorios públicos</div>
+    </a>
+    <a class="card" href="radar-trabajos_verticales.html" style="--c:#dc2626" data-key="trabajos_verticales" data-category="Construcción & Reforma">
+      <div class="ico">🪢</div>
+      <div class="lbl">Trabajos Verticales</div>
+      <div class="sub">×1.5 · directorios públicos</div>
+    </a>
+    <a class="card" href="radar-carpinteria.html" style="--c:#a16207" data-key="carpinteria" data-category="Construcción & Reforma">
+      <div class="ico">🪚</div>
+      <div class="lbl">Carpintería</div>
+      <div class="sub">×1.3 · directorios públicos</div>
+    </a>
+    <a class="card" href="radar-proveedor_exterior.html" style="--c:#65a30d" data-key="proveedor_exterior" data-category="Construcción & Reforma">
+      <div class="ico">🖌️</div>
+      <div class="lbl">Pintura y Fachadas</div>
+      <div class="sub">×1.3 · directorios públicos</div>
+    </a>
+    <a class="card" href="radar-fontaneria.html" style="--c:#0369a1" data-key="fontaneria" data-category="Construcción & Reforma">
+      <div class="ico">🚰</div>
+      <div class="lbl">Fontanería</div>
+      <div class="sub">×1.3 · directorios públicos</div>
+    </a>
+    <a class="card" href="radar-electricista.html" style="--c:#eab308" data-key="electricista" data-category="Construcción & Reforma">
+      <div class="ico">⚡</div>
+      <div class="lbl">Electricista</div>
+      <div class="sub">×1.3 · directorios públicos</div>
+    </a></div>
+  </section>
+  <section class="category" data-category="Servicios Especializados">
+    <h2>Servicios Especializados (<span class="cat-count">7</span>)</h2>
+    <div class="grid">
+    <a class="card" href="radar-aseguradora.html" style="--c:#0d9488" data-key="aseguradora" data-category="Servicios Especializados">
+      <div class="ico">🛡️</div>
+      <div class="lbl">Correduría de Seguros</div>
+      <div class="sub">×1.4 · 1 fuente</div>
+    </a>
+    <a class="card" href="radar-limpieza.html" style="--c:#06b6d4" data-key="limpieza" data-category="Servicios Especializados">
+      <div class="ico">🧹</div>
+      <div class="lbl">Empresa de Limpieza</div>
+      <div class="sub">×1.2 · 1 fuente</div>
+    </a>
+    <a class="card" href="radar-mudanzas.html" style="--c:#be185d" data-key="mudanzas" data-category="Servicios Especializados">
+      <div class="ico">📦</div>
+      <div class="lbl">Mudanzas</div>
+      <div class="sub">×1.3 · 1 fuente</div>
+    </a>
+    <a class="card" href="radar-jardineria.html" style="--c:#22c55e" data-key="jardineria" data-category="Servicios Especializados">
+      <div class="ico">🌿</div>
+      <div class="lbl">Jardinería y Paisajismo</div>
+      <div class="sub">×1.2 · directorios públicos</div>
+    </a>
+    <a class="card" href="radar-veterinario.html" style="--c:#ec4899" data-key="veterinario" data-category="Servicios Especializados">
+      <div class="ico">🐾</div>
+      <div class="lbl">Clínica Veterinaria</div>
+      <div class="sub">×1.2 · directorios públicos</div>
+    </a>
+    <a class="card" href="radar-peluqueria.html" style="--c:#f97316" data-key="peluqueria" data-category="Servicios Especializados">
+      <div class="ico">💇</div>
+      <div class="lbl">Peluquería</div>
+      <div class="sub">×1.1 · directorios públicos</div>
+    </a>
+    <a class="card" href="radar-logistica.html" style="--c:#06b6d4" data-key="logistica" data-category="Servicios Especializados">
+      <div class="ico">🚚</div>
+      <div class="lbl">Logística y Transporte</div>
+      <div class="sub">×1.3 · directorios públicos</div>
+    </a></div>
+  </section>
+  <section class="category" data-category="Decoración & Tecnología">
+    <h2>Decoración & Tecnología (<span class="cat-count">3</span>)</h2>
+    <div class="grid">
+    <a class="card" href="radar-decorador.html" style="--c:#db2777" data-key="decorador" data-category="Decoración & Tecnología">
+      <div class="ico">🎨</div>
+      <div class="lbl">Decoración / Interiorismo</div>
+      <div class="sub">×1.4 · 1 fuente</div>
+    </a>
+    <a class="card" href="radar-inteligencia_artificial.html" style="--c:#2563eb" data-key="inteligencia_artificial" data-category="Decoración & Tecnología">
+      <div class="ico">🤖</div>
+      <div class="lbl">Inteligencia Artificial</div>
+      <div class="sub">×1.3 · 1 fuente</div>
+    </a>
+    <a class="card" href="radar-telecomunicaciones.html" style="--c:#4338ca" data-key="telecomunicaciones" data-category="Decoración & Tecnología">
+      <div class="ico">📡</div>
+      <div class="lbl">Telecomunicaciones</div>
+      <div class="sub">×1.2 · directorios públicos</div>
+    </a></div>
+  </section>
+  <section class="category" data-category="Servicios Básicos">
+    <h2>Servicios Básicos (<span class="cat-count">1</span>)</h2>
+    <div class="grid">
+    <a class="card" href="radar-servicios_basicos.html" style="--c:#6b7280" data-key="servicios_basicos" data-category="Servicios Básicos">
+      <div class="ico">🔧</div>
+      <div class="lbl">Servicios Básicos</div>
+      <div class="sub">×1 · 1 fuente</div>
+    </a></div>
+  </section></div>
+
+  <div id="noResults" class="empty-state" style="display:none">
+    <p>❌ No se encontraron radares con esos criterios</p>
+  </div>
+</main>
+<footer style="border-top:1px solid var(--border);padding:16px 24px;margin-top:40px;display:flex;justify-content:space-between;align-items:center;gap:24px;font-size:13px;color:var(--text-muted)"><span>Inmoworking Pro · Radares Especializados</span><span style="display:flex;gap:16px"><a href="privacy.html" style="color:var(--accent);text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:var(--accent);text-decoration:none">Cookies</a></span></footer>
+<script>
+const PROFESSIONS = [{"key":"agente_inmobiliario","label":"Agente Inmobiliario","category":"Inmobiliario","icon":"🏠","color":"#0ea5e9","multiplier":1.7,"sources":["boe_subastas","borme_inmobiliarias","google_alerts_inmo"],"services":["Captación de inmuebles","Valoración y tasación","Intermediación compra-venta","Intermediación alquiler","Gestión de visitas","Negociación de precio","Asesoría hipotecaria básica","Acompañamiento a notaría"]},{"key":"gerente_inmobiliario","label":"Gerente Inmobiliario","category":"Inmobiliario","icon":"📈","color":"#1d4ed8","multiplier":1.7,"sources":["borme_inmobiliarias"],"services":["Dirección de equipo comercial","Estrategia de marketing","Análisis de mercado","Control financiero","Cumplimiento normativo","Gestión de CRM","Formación del equipo"]},{"key":"reformista","label":"Reformas Integrales","category":"Construcción & Reforma","icon":"🔨","color":"#f59e0b","multiplier":1.4,"sources":["google_alerts_reforma"],"services":["Consultoría inicial","Planificación y coordinación de gremios","Demolición y desescombro","Albañilería","Fontanería","Electricidad","Pintura","Carpintería","Suelos y alicatados","Pladur","Reformas de cocinas y baños","Reformas de locales y oficinas"]},{"key":"arquitecto","label":"Arquitecto","category":"Construcción & Reforma","icon":"📐","color":"#7c3aed","multiplier":1.4,"sources":[],"services":["Proyectos de obra nueva","Reformas y rehabilitación","Dirección de obra","Certificados energéticos","Cédulas de habitabilidad","Licencias urbanísticas","Project management"]},{"key":"abogado","label":"Bufete de Abogados","category":"Legal & Fiscal","icon":"⚖️","color":"#0f172a","multiplier":1.7,"sources":["boe_concursos","borme_disoluciones"],"services":["Asesoría legal preventiva","Redacción de contratos","Litigación civil/mercantil/laboral","Defensa penal","Derecho de sociedades","Concursal","Inmobiliario","Familia","Fiscal y tributario","Protección de datos"]},{"key":"asesor_financiero","label":"Asesor Financiero","category":"Legal & Fiscal","icon":"💼","color":"#059669","multiplier":1.4,"sources":["boe_subastas","borme_expansion"],"services":["Planificación financiera personal","Inversiones y carteras","Asesoramiento hipotecario","Fiscalidad de inversiones","Planes de pensiones","Reestructuración de deuda"]},{"key":"inversor","label":"Inversor Inmobiliario","category":"Inmobiliario","icon":"💰","color":"#16a34a","multiplier":1.6,"sources":["boe_subastas"],"services":["Búsqueda de oportunidades off-market","Análisis de rentabilidad","Subastas y embargos","Flipping y house flipping","Build-to-rent","Fondos inmobiliarios"]},{"key":"administrador_fincas","label":"Administrador de Fincas","category":"Inmobiliario","icon":"🏢","color":"#475569","multiplier":1.7,"sources":["borme_admin_changes"],"services":["Administración de comunidades","Convocatoria de juntas","Gestión contable","Seguros comunitarios","Reclamación de morosos","Mantenimiento de inmuebles"]},{"key":"decorador","label":"Decoración / Interiorismo","category":"Decoración & Tecnología","icon":"🎨","color":"#db2777","multiplier":1.4,"sources":["google_alerts_reforma"],"services":["Diseño de interiores","Home staging","Selección de mobiliario","Iluminación decorativa","Reformas estéticas","Asesoramiento de color y estilo"]},{"key":"trabajos_verticales","label":"Trabajos Verticales","category":"Construcción & Reforma","icon":"🪢","color":"#dc2626","multiplier":1.5,"sources":[],"services":["Limpieza de fachadas","Reparación de fachadas","Pintura exterior en altura","Sellado de grietas","Rehabilitación de cornisas","Bajantes y canalones","Tejados y cubiertas","Impermeabilización de terrazas","Líneas de vida","Inspección de estructuras","Limpieza de cristales en altura","Control de aves","Mantenimiento de aerogeneradores"]},{"key":"inteligencia_artificial","label":"Inteligencia Artificial","category":"Decoración & Tecnología","icon":"🤖","color":"#2563eb","multiplier":1.3,"sources":["borme_empresas_digital"],"services":["Consultoría de IA","Auditoría de procesos","Desarrollo a medida","Integración con sistemas existentes","Chatbots y asistentes","RPA y automatizaciones","Análisis predictivo","NLP y visión por computador","Generación automática de informes"]},{"key":"gestor","label":"Gestoría","category":"Legal & Fiscal","icon":"📋","color":"#0891b2","multiplier":1.5,"sources":["borme_pymes_nuevas"],"services":["Altas de autónomos","Constitución de sociedades","Contabilidad","Impuestos trimestrales y anuales","Nóminas y Seguridad Social","Trámites con administraciones"]},{"key":"notario","label":"Notaría","category":"Inmobiliario","icon":"📜","color":"#92400e","multiplier":1.5,"sources":["boe_herencias"],"services":["Escrituras de compraventa","Hipotecas","Testamentos y herencias","Poderes notariales","Constitución de sociedades","Actas notariales"]},{"key":"propietario","label":"Propietario","category":"Inmobiliario","icon":"🔑","color":"#9333ea","multiplier":1.5,"sources":[],"services":["Venta de inmueble propio","Alquiler de inmueble propio","Gestión patrimonial","Optimización fiscal","Búsqueda de inquilinos solventes"]},{"key":"promotor","label":"Promotor Inmobiliario","category":"Inmobiliario","icon":"🏗️","color":"#ea580c","multiplier":1.7,"sources":[],"services":["Búsqueda de suelo","Estudios de viabilidad","Gestión urbanística","Dirección de promociones","Comercialización en plano","Postventa"]},{"key":"aseguradora","label":"Correduría de Seguros","category":"Servicios Especializados","icon":"🛡️","color":"#0d9488","multiplier":1.4,"sources":["borme_nuevas_empresas"],"services":["Seguros de hogar","Vida y salud","Comunidades","Comercio y empresas","Responsabilidad civil","Decenal y todo riesgo construcción"]},{"key":"carpinteria","label":"Carpintería","category":"Construcción & Reforma","icon":"🪚","color":"#a16207","multiplier":1.3,"sources":[],"services":["Carpintería de madera a medida","Puertas y armarios","Tarimas y suelos","Carpintería de aluminio y PVC","Ventanas","Mamparas","Vestidores"]},{"key":"limpieza","label":"Empresa de Limpieza","category":"Servicios Especializados","icon":"🧹","color":"#06b6d4","multiplier":1.2,"sources":["borme_empresas_servicios"],"services":["Limpieza de oficinas","Comunidades de vecinos","Hoteles y hostelería","Limpieza fin de obra","Cristales","Mantenimiento integral"]},{"key":"mudanzas","label":"Mudanzas","category":"Servicios Especializados","icon":"📦","color":"#be185d","multiplier":1.3,"sources":["borme_cambios_domicilio"],"services":["Mudanzas locales","Mudanzas nacionales","Mudanzas internacionales","Embalaje profesional","Guardamuebles","Mudanzas de oficinas","Transporte de pianos y obras de arte"]},{"key":"telecomunicaciones","label":"Telecomunicaciones","category":"Decoración & Tecnología","icon":"📡","color":"#4338ca","multiplier":1.2,"sources":[],"services":["Fibra óptica","Antenas y cabeceras","Telefonía empresarial","Centralitas IP","Cableado estructurado","Wifi profesional"]},{"key":"proveedor_exterior","label":"Pintura y Fachadas","category":"Construcción & Reforma","icon":"🖌️","color":"#65a30d","multiplier":1.3,"sources":[],"services":["Pintura de fachadas","Revestimientos exteriores","Aislamiento térmico SATE","Rehabilitación energética","Limpieza y tratamiento de muros"]},{"key":"servicios_basicos","label":"Servicios Básicos","category":"Servicios Básicos","icon":"🔧","color":"#6b7280","multiplier":1,"sources":["borme_cambios_domicilio"],"services":["Cerrajería 24h","Pequeñas reparaciones","Mantenimiento del hogar","Servicios urgentes","Manitas profesional"]},{"key":"fontaneria","label":"Fontanería","category":"Construcción & Reforma","icon":"🚰","color":"#0369a1","multiplier":1.3,"sources":[],"services":["Instalación de tuberías","Reparación de fugas","Desatranques","Calefacción","Agua caliente sanitaria","Bombas de agua","Mantenimiento preventivo"]},{"key":"electricista","label":"Electricista","category":"Construcción & Reforma","icon":"⚡","color":"#eab308","multiplier":1.3,"sources":[],"services":["Instalaciones eléctricas","Reparación de averías","Cuadros eléctricos","Iluminación","Sistemas de seguridad","Puestas a tierra","Certificados eléctricos"]},{"key":"jardineria","label":"Jardinería y Paisajismo","category":"Servicios Especializados","icon":"🌿","color":"#22c55e","multiplier":1.2,"sources":[],"services":["Diseño de jardines","Instalación de césped","Podas y mantenimiento","Riego automatizado","Árboles ornamentales","Plantas de interior","Trabajos de paisajismo"]},{"key":"veterinario","label":"Clínica Veterinaria","category":"Servicios Especializados","icon":"🐾","color":"#ec4899","multiplier":1.2,"sources":[],"services":["Consultas generales","Cirugías","Análisis y laboratorio","Odontología veterinaria","Vacunaciones","Urgencias 24h","Peluquería canina"]},{"key":"consultor_rh","label":"Consultoría de Recursos Humanos","category":"Legal & Fiscal","icon":"👥","color":"#8b5cf6","multiplier":1.4,"sources":[],"services":["Selección de personal","Formación corporativa","Asesoramiento laboral","Evaluación de competencias","Asesoramiento en conflictos laborales","Outsourcing de RRHH","Cultura organizacional"]},{"key":"peluqueria","label":"Peluquería","category":"Servicios Especializados","icon":"💇","color":"#f97316","multiplier":1.1,"sources":[],"services":["Cortes de pelo","Tintes y coloración","Tratamientos capilares","Peinados especiales","Asesoramiento de imagen","Servicios a domicilio","Barbería"]},{"key":"logistica","label":"Logística y Transporte","category":"Servicios Especializados","icon":"🚚","color":"#06b6d4","multiplier":1.3,"sources":[],"services":["Transporte de mercancías","Almacenamiento","Distribución","Aduanas y documentación","Seguimiento en tiempo real","Gestión de inventarios","Transporte especializado"]},{"key":"consultor_ambiental","label":"Consultoría Ambiental","category":"Legal & Fiscal","icon":"♻️","color":"#16a34a","multiplier":1.3,"sources":[],"services":["Auditorías ambientales","Estudios de impacto ambiental","Gestión de residuos","Sistemas de certificación","Cumplimiento normativo ambiental","Asesoramiento en sostenibilidad","Informes ambientales"]}];
+const searchInput = document.getElementById('searchInput');
+const categoryFilter = document.getElementById('categoryFilter');
+const multiplierFilter = document.getElementById('multiplierFilter');
+const multiplierValue = document.getElementById('multiplierValue');
+const resetBtn = document.getElementById('resetBtn');
+const resultsDiv = document.getElementById('results');
+const noResults = document.getElementById('noResults');
+
+function updateMultiplierLabel() {
+  const val = parseFloat(multiplierFilter.value);
+  multiplierValue.textContent = '×1.0 hasta ×' + val.toFixed(1);
+}
+
+function filterRadares() {
+  const search = searchInput.value.toLowerCase().trim();
+  const category = categoryFilter.value;
+  const maxMult = parseFloat(multiplierFilter.value);
+
+  const cards = document.querySelectorAll('.card');
+  let visibleCount = 0;
+  let visibleByCategory = {};
+
+  cards.forEach(card => {
+    const key = card.dataset.key;
+    const prof = PROFESSIONS.find(p => p.key === key);
+
+    const matchSearch = !search ||
+      prof.label.toLowerCase().includes(search) ||
+      prof.category.toLowerCase().includes(search) ||
+      prof.services.some(s => s.toLowerCase().includes(search));
+
+    const matchCategory = !category || prof.category === category;
+    const matchMult = prof.multiplier <= maxMult;
+
+    const visible = matchSearch && matchCategory && matchMult;
+    card.style.display = visible ? 'block' : 'none';
+
+    if (visible) {
+      visibleCount++;
+      if (!visibleByCategory[prof.category]) visibleByCategory[prof.category] = 0;
+      visibleByCategory[prof.category]++;
+    }
+  });
+
+  // Update category counts and visibility
+  document.querySelectorAll('.category').forEach(section => {
+    const cat = section.dataset.category;
+    const count = visibleByCategory[cat] || 0;
+    section.style.display = count > 0 ? 'block' : 'none';
+    section.querySelector('.cat-count').textContent = count;
+  });
+
+  noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+}
+
+searchInput.addEventListener('input', filterRadares);
+categoryFilter.addEventListener('change', filterRadares);
+multiplierFilter.addEventListener('input', () => {
+  updateMultiplierLabel();
+  filterRadares();
+});
+resetBtn.addEventListener('click', () => {
+  searchInput.value = '';
+  categoryFilter.value = '';
+  multiplierFilter.value = '2';
+  updateMultiplierLabel();
+  filterRadares();
+});
+
+updateMultiplierLabel();
+
+const themeToggle = document.getElementById('themeToggle');
+function updateThemeButton(){
+  const t = localStorage.getItem('theme') || 'auto';
+  themeToggle.textContent = t === 'dark' ? '☀️' : t === 'light' ? '🌙' : '⚪';
+}
+themeToggle.addEventListener('click', () => {
+  const themes = ['auto', 'light', 'dark'];
+  const curr = localStorage.getItem('theme') || 'auto';
+  const next = themes[(themes.indexOf(curr) + 1) % themes.length];
+  localStorage.setItem('theme', next);
+  const d = window.matchMedia('(prefers-color-scheme:dark)').matches;
+  const isDark = next === 'auto' ? d : next === 'dark';
+  document.documentElement.classList.toggle('dark-mode', isDark);
+  updateThemeButton();
+});
+updateThemeButton();
+</script>
+</body></html>

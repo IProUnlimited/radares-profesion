@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Política de Cookies — IWPro</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="styles.css">
+<script>
+const t=localStorage.getItem('theme')||'auto';
+const d=window.matchMedia('(prefers-color-scheme:dark)').matches;
+const isDark=t==='auto'?d:t==='dark';
+document.documentElement.classList.toggle('dark-mode',isDark);
+</script>
+</head>
+<body>
+<header><h1>Política de Cookies</h1></header>
+<main style="max-width:800px;margin:0 auto;padding:24px">
+<h2>1. ¿Qué son las Cookies?</h2>
+<p>Las cookies son pequeños archivos de texto que se almacenan en tu navegador. Nosotros NO usamos cookies tradicionales. En su lugar, usamos <strong>localStorage</strong> (almacenamiento local del navegador), que es más privado y bajo tu control completo.</p>
+
+<h2>2. Datos que Almacenamos Localmente</h2>
+<table style="width:100%;border-collapse:collapse;margin:20px 0">
+<tr style="background:var(--bg-secondary);border:1px solid var(--border)">
+<th style="padding:12px;text-align:left;border:1px solid var(--border)">Clave</th>
+<th style="padding:12px;text-align:left;border:1px solid var(--border)">Propósito</th>
+<th style="padding:12px;text-align:left;border:1px solid var(--border)">Duración</th>
+</tr>
+<tr style="border:1px solid var(--border)">
+<td style="padding:12px;border:1px solid var(--border)"><code>theme</code></td>
+<td style="padding:12px;border:1px solid var(--border)">Guardamos tu preferencia de tema (claro/oscuro)</td>
+<td style="padding:12px;border:1px solid var(--border)">Indefinido</td>
+</tr>
+<tr style="border:1px solid var(--border)">
+<td style="padding:12px;border:1px solid var(--border)"><code>iwp_tracker</code></td>
+<td style="padding:12px;border:1px solid var(--border)">Favoritos y notas de leads marcados</td>
+<td style="padding:12px;border:1px solid var(--border)">Indefinido</td>
+</tr>
+<tr style="border:1px solid var(--border)">
+<td style="padding:12px;border:1px solid var(--border)"><code>iwp_history</code></td>
+<td style="padding:12px;border:1px solid var(--border)">Últimas 5 ciudades buscadas</td>
+<td style="padding:12px;border:1px solid var(--border)">Indefinido</td>
+</tr>
+<tr style="border:1px solid var(--border)">
+<td style="padding:12px;border:1px solid var(--border)"><code>iwp_token</code></td>
+<td style="padding:12px;border:1px solid var(--border)">Token de sesión si te registras</td>
+<td style="padding:12px;border:1px solid var(--border)">Hasta que cierres sesión</td>
+</tr>
+</table>
+
+<h2>3. Consentimiento</h2>
+<p>Al usar esta web y aceptar nuestro banner de cookies, consientes el almacenamiento local de estos datos. Puedes:</p>
+<ul>
+<li><strong>Borrar datos:</strong> Abre DevTools (F12) → Storage → Local Storage → Elimina las claves iwp_*</li>
+<li><strong>Gestionar cookies del navegador:</strong> Ve a configuración → Privacidad → Cookies</li>
+</ul>
+
+<h2>4. Terceros</h2>
+<p>No compartimos tu localStorage con terceros. Los datos de búsqueda se envían a nuestro backend CRM en <strong>crm-agente-api.onrender.com</strong> solo para procesar tu solicitud.</p>
+
+<h2>5. RGPD y Leyes Aplicables</h2>
+<p>Esta política cumple con:</p>
+<ul>
+<li>RGPD (Reglamento General de Protección de Datos) - UE</li>
+<li>LSSI-CE (Ley de Servicios de la Sociedad de la Información) - España</li>
+</ul>
+
+<p style="margin-top:40px;font-size:13px;color:var(--text-muted)">Última actualización: 12/05/2026</p>
+</main>
+
+<footer style="border-top:1px solid var(--border);padding:24px;margin-top:40px;display:flex;justify-content:space-between;align-items:center;gap:24px;font-size:13px;color:var(--text-muted)">
+  <div>Inmoworking Pro · Radares Especializados</div>
+  <div style="display:flex;gap:16px"><a href="privacy.html" style="color:var(--accent);text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:var(--accent);text-decoration:none">Cookies</a></div>
+</footer>
+
+<script>
+(function() {
+  const CONSENT_KEY = 'iwp_cookies_consent';
+
+  function showBanner() {
+    if (localStorage.getItem(CONSENT_KEY)) return;
+
+    const banner = document.createElement('div');
+    banner.innerHTML = '<div style="position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,0.95);color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;gap:24px;font-size:14px;z-index:9999;border-top:1px solid rgba(255,255,255,0.1)"><div style="flex:1"><strong>🍪 Cookies y Datos</strong><br/>Utilizamos localStorage para guardar tus preferencias (tema, favoritos). Consulta nuestra <a href="cookies.html" style="color:#60a5fa;text-decoration:underline">política de cookies</a>.</div><button id="accept-cookies" style="white-space:nowrap;background:#3b82f6;color:#fff;border:none;padding:8px 24px;border-radius:6px;cursor:pointer;font-weight:600">Aceptar</button></div>';
+    document.body.appendChild(banner);
+
+    document.getElementById('accept-cookies').addEventListener('click', function() {
+      localStorage.setItem(CONSENT_KEY, 'true');
+      banner.remove();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', showBanner);
+  } else {
+    showBanner();
+  }
+})();
+</script>
+</body>
+</html>

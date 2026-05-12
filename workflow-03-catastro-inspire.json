@@ -1,0 +1,193 @@
+{
+  "name": "Radar 03 — Catastro INSPIRE WFS",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 24
+            }
+          ]
+        }
+      },
+      "id": "trigger-schedule",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://ovc.catastro.meh.es/INSPIRE/wfsCP.aspx",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+            },
+            {
+              "name": "Accept",
+              "value": "application/xml"
+            }
+          ]
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "SERVICE",   "value": "WFS" },
+            { "name": "VERSION",   "value": "2.0.0" },
+            { "name": "REQUEST",   "value": "GetFeature" },
+            { "name": "TYPENAMES", "value": "cp:CadastralParcel" },
+            { "name": "COUNT",     "value": "100" }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "catastro-wfs",
+      "name": "Catastro INSPIRE WFS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "xml-parse",
+      "name": "Parse XML",
+      "type": "n8n-nodes-base.xml",
+      "typeVersion": 1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "language": "javaScript",
+        "jsCode": "// Extraer parcelas del FeatureCollection GML\nconst items = $input.all();\nconst leads = [];\n\nfor (const item of items) {\n  const data = item.json;\n\n  // El XML parseado expone la estructura GML anidada\n  // Navegamos a los miembros del FeatureCollection\n  let members = [];\n  try {\n    const fc = data.FeatureCollection;\n    const rawMembers = fc.member || [];\n    members = Array.isArray(rawMembers) ? rawMembers : [rawMembers];\n  } catch (e) {\n    continue;\n  }\n\n  for (const member of members) {\n    try {\n      const parcel = member['cp:CadastralParcel'];\n      if (!parcel) continue;\n\n      const refCatastral = parcel['cp:nationalCadastralReference']?.[0] || '';\n      const area         = parcel['cp:areaValue']?.[0]?._ || parcel['cp:areaValue']?.[0] || '';\n      const refPoint     = parcel['cp:referencePoint']?.[0];\n      const posRaw       = refPoint?.['gml:Point']?.[0]?.['gml:pos']?.[0] || '';\n      const [lat, lng]   = posRaw.trim().split(' ').map(Number);\n      const label        = parcel['cp:label']?.[0] || '';\n\n      if (!refCatastral) continue;\n\n      leads.push({\n        json: {\n          source:              'catastro_inspire',\n          nationalRef:         refCatastral,\n          label,\n          areaSqm:             parseFloat(area),\n          lat,\n          lng,\n          // Campos requeridos por /api/radar/inbound\n          user_id:             '06523398-43a6-42a8-896b-3307f14d7fda',\n          name:                `Parcela ${refCatastral}`,\n          description:         `Parcela catastral. Área: ${area} m². Ref: ${refCatastral}`,\n          location:            `${lat},${lng}`,\n          raw_source:          'catastro_inspire_wfs',\n          score:               0.6\n        }\n      });\n    } catch (e) {\n      // Parcela malformada, skip\n      continue;\n    }\n  }\n}\n\nif (leads.length === 0) {\n  throw new Error('No se extrajeron parcelas del XML. Revisar estructura GML.');\n}\n\nreturn leads;"
+      },
+      "id": "transform-leads",
+      "name": "Transformar a Leads",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://crm-agente-api.onrender.com/api/radar/inbound",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Radar-Secret",
+              "value": "2a64587a261b8a2062e581c8b9edf0852220d235a0d18fecc422cd4dff54aa01"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": []
+        },
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "post-inbound",
+      "name": "POST /api/radar/inbound",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "check-status",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": 200,
+              "operator": {
+                "type": "number",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-response",
+      "name": "Verificar respuesta",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log de error para debugging\nconst item = $input.first().json;\nconsole.error('Error al enviar lead a /inbound:', JSON.stringify(item));\nreturn [{ json: { error: true, response: item } }];"
+      },
+      "id": "log-error",
+      "name": "Log Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Éxito — lead registrado\nconst item = $input.first().json;\nreturn [{ json: { ok: true, lead: item } }];"
+      },
+      "id": "log-ok",
+      "name": "Lead OK",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 400]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [[{ "node": "Catastro INSPIRE WFS", "type": "main", "index": 0 }]]
+    },
+    "Catastro INSPIRE WFS": {
+      "main": [[{ "node": "Parse XML", "type": "main", "index": 0 }]]
+    },
+    "Parse XML": {
+      "main": [[{ "node": "Transformar a Leads", "type": "main", "index": 0 }]]
+    },
+    "Transformar a Leads": {
+      "main": [[{ "node": "POST /api/radar/inbound", "type": "main", "index": 0 }]]
+    },
+    "POST /api/radar/inbound": {
+      "main": [[{ "node": "Verificar respuesta", "type": "main", "index": 0 }]]
+    },
+    "Verificar respuesta": {
+      "main": [
+        [{ "node": "Log Error", "type": "main", "index": 0 }],
+        [{ "node": "Lead OK",   "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "instanceId": "lendar-radar-03-catastro-inspire-v2"
+  }
+}
