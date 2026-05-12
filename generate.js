@@ -89,7 +89,7 @@ function radarHtml(key, p) {
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>Radar ${htmlEscape(p.label)} — IWPro</title>
+<title>${htmlEscape(p.label)} — Nexo Leads</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="styles.css">
 <style>
@@ -152,7 +152,7 @@ function radarHtml(key, p) {
     <div id="results"><div class="empty">Pulsa "Generar leads" para empezar</div></div>
   </section>
 </main>
-<footer style="border-top:1px solid #333;padding:12px;margin-top:24px;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:12px;color:#94a3b8"><span>Inmoworking Pro · ${htmlEscape(p.label)}</span><span style="display:flex;gap:12px"><a href="privacy.html" style="color:#60a5fa;text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:#60a5fa;text-decoration:none">Cookies</a></span></footer>
+<footer style="border-top:1px solid #333;padding:12px;margin-top:24px;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:12px;color:#94a3b8"><span>Nexo Leads · ${htmlEscape(p.label)}</span><span style="display:flex;gap:12px"><a href="privacy.html" style="color:#60a5fa;text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:#60a5fa;text-decoration:none">Cookies</a></span></footer>
 <script>
 const PROFESSION = ${JSON.stringify(key)};
 const API_BASE = ${JSON.stringify(API_BASE)};
@@ -346,7 +346,7 @@ function saveToTracker(id){
     tracker[id] = {
       id: id,
       profession: PROFESSION,
-      professionLabel: document.title.replace(/^Radar /,'').replace(/ — IWPro$/,''),
+      professionLabel: document.title.replace(/ — Nexo Leads$/,''),
       name: f.name, phone: f.phone, email: f.email, website: f.website,
       city: f.city, address: f.address, score: f.score,
       rating: f.rating, reviews_count: f.reviews_count, notes: f.notes,
@@ -475,7 +475,7 @@ function indexHtml(profs) {
 
   return `<!doctype html>
 <html lang="es"><head><meta charset="utf-8">
-<title>Radares por Profesión — IWPro</title>
+<title>Nexo Leads</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="styles.css">
 <script>const t=localStorage.getItem('theme')||'auto';const d=window.matchMedia('(prefers-color-scheme:dark)').matches;const isDark=t==='auto'?d:t==='dark';document.documentElement.classList.toggle('dark-mode',isDark);</script>
@@ -483,7 +483,7 @@ function indexHtml(profs) {
 <body>
 <header style="display:flex;justify-content:space-between;align-items:center">
   <div>
-    <h1>Radares Especializados por Profesión</h1>
+    <h1>Nexo Leads</h1>
     <p>${Object.keys(profs).length} radares agrupados en ${categoryOrder.length} categorías · Conectado a CRM Propium</p>
   </div>
   <div style="display:flex;gap:12px;align-items:center;height:fit-content">
@@ -511,7 +511,7 @@ function indexHtml(profs) {
     <p>❌ No se encontraron radares con esos criterios</p>
   </div>
 </main>
-<footer style="border-top:1px solid var(--border);padding:16px 24px;margin-top:40px;display:flex;justify-content:space-between;align-items:center;gap:24px;font-size:13px;color:var(--text-muted)"><span>Inmoworking Pro · Radares Especializados</span><span style="display:flex;gap:16px"><a href="privacy.html" style="color:var(--accent);text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:var(--accent);text-decoration:none">Cookies</a></span></footer>
+<footer style="border-top:1px solid var(--border);padding:16px 24px;margin-top:40px;display:flex;justify-content:space-between;align-items:center;gap:24px;font-size:13px;color:var(--text-muted)"><span>Nexo Leads · Radares Especializados</span><span style="display:flex;gap:16px"><a href="privacy.html" style="color:var(--accent);text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:var(--accent);text-decoration:none">Cookies</a></span></footer>
 <script>
 const PROFESSIONS = ${JSON.stringify(profsData)};
 const searchInput = document.getElementById('searchInput');
@@ -610,7 +610,7 @@ function trackerHtml(profs) {
   const profOpts = Object.entries(profs).map(([k, p]) => `<option value="${k}">${htmlEscape(p.label)}</option>`).join('');
   return `<!doctype html>
 <html lang="es"><head><meta charset="utf-8">
-<title>Tracker de Leads — IWPro</title>
+<title>Tracker de Leads — Nexo Leads</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="styles.css">
 <script>const t=localStorage.getItem('theme')||'auto';const d=window.matchMedia('(prefers-color-scheme:dark)').matches;const isDark=t==='auto'?d:t==='dark';document.documentElement.classList.toggle('dark-mode',isDark);</script>
@@ -684,7 +684,7 @@ function trackerHtml(profs) {
     </div>
   </section>
 </main>
-<footer style="border-top:1px solid var(--border);padding:16px 24px;margin-top:40px;display:flex;justify-content:space-between;align-items:center;gap:24px;font-size:13px;color:var(--text-muted)"><span>Inmoworking Pro · Radares Especializados</span><span style="display:flex;gap:16px"><a href="privacy.html" style="color:var(--accent);text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:var(--accent);text-decoration:none">Cookies</a></span></footer>
+<footer style="border-top:1px solid var(--border);padding:16px 24px;margin-top:40px;display:flex;justify-content:space-between;align-items:center;gap:24px;font-size:13px;color:var(--text-muted)"><span>Nexo Leads · Radares Especializados</span><span style="display:flex;gap:16px"><a href="privacy.html" style="color:var(--accent);text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:var(--accent);text-decoration:none">Cookies</a></span></footer>
 <script>
 function getTracker(){ return JSON.parse(localStorage.getItem('iwp_tracker')||'{}'); }
 function saveTracker(t){ localStorage.setItem('iwp_tracker', JSON.stringify(t)); }
@@ -847,7 +847,7 @@ themeToggle.addEventListener('click', () => {
 function leadHtml() {
   return `<!doctype html>
 <html lang="es"><head><meta charset="utf-8">
-<title>Ficha de Lead — IWPro</title>
+<title>Ficha de Lead — Nexo Leads</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="styles.css">
 <script>const t=localStorage.getItem('theme')||'auto';const d=window.matchMedia('(prefers-color-scheme:dark)').matches;const isDark=t==='auto'?d:t==='dark';document.documentElement.classList.toggle('dark-mode',isDark);</script>
@@ -880,7 +880,7 @@ function leadHtml() {
 <main class="radar-main">
   <div id="content"><div class="empty">Cargando…</div></div>
 </main>
-<footer style="border-top:1px solid var(--border);padding:16px 24px;margin-top:40px;display:flex;justify-content:space-between;align-items:center;gap:24px;font-size:13px;color:var(--text-muted)"><span>Inmoworking Pro · Radares Especializados</span><span style="display:flex;gap:16px"><a href="privacy.html" style="color:var(--accent);text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:var(--accent);text-decoration:none">Cookies</a></span></footer>
+<footer style="border-top:1px solid var(--border);padding:16px 24px;margin-top:40px;display:flex;justify-content:space-between;align-items:center;gap:24px;font-size:13px;color:var(--text-muted)"><span>Nexo Leads · Radares Especializados</span><span style="display:flex;gap:16px"><a href="privacy.html" style="color:var(--accent);text-decoration:none">Privacidad</a> · <a href="cookies.html" style="color:var(--accent);text-decoration:none">Cookies</a></span></footer>
 <script>
 function getTracker(){ return JSON.parse(localStorage.getItem('iwp_tracker')||'{}'); }
 function saveTracker(t){ localStorage.setItem('iwp_tracker', JSON.stringify(t)); }
