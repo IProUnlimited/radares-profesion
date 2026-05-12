@@ -12,7 +12,7 @@ const path = require("path");
 const ROOT = __dirname;
 const PROFS_FILE = path.join(ROOT, "professions.json");
 // URL del backend API - puede configurarse con variable de entorno
-const API_BASE = process.env.API_BASE || "https://nexo-leads-api.onrender.com";
+const API_BASE = process.env.API_BASE || "https://nexo-leads-api-v2.onrender.com";
 
 // Load professions.json
 let PROFS = {};
