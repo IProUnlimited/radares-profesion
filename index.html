@@ -257,7 +257,7 @@ loginForm.onsubmit = async(e) => {
   const password = document.getElementById('loginPassword').value;
   loginError.style.display = 'none';
   try {
-    const r = await fetch(API_BASE + '/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email, password}) });
+    const r = await fetch(API_BASE + '/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email, password, app_name: "nexo-leads"}) });
     const data = await r.json();
     if(r.ok && data.token) { setToken(data.token); loginPanel.style.display = 'none'; appContent.style.display = 'block'; }
     else { loginError.textContent = data.error || 'Credenciales inválidas'; loginError.style.display = 'block'; }
