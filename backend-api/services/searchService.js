@@ -1,5 +1,7 @@
 import overpassService from './overpassService.js';
 import gmapsService from './gmapsService.js';
+import bormeService from './bormeService.js';
+import boeService from './boeService.js';
 import cacheService from './cacheService.js';
 
 const searchService = {
@@ -40,6 +42,98 @@ const searchService = {
       return enriched;
     } catch (error) {
       console.error('[SEARCH_ERROR]', error.message);
+      throw error;
+    }
+  },
+
+  // Búsqueda multi-fuente (OSM + Google Maps + BORME + BOE)
+  async searchMultiSource({ profession, city, sources = ['osm', 'gmaps', 'borme', 'boe'] }) {
+    const cacheKey = `search-multi:${profession}:${city}:${sources.join(',')}`;
+    const cached = cacheService.get(cacheKey);
+    if (cached) {
+      console.log(`[CACHE] Hit multi-source: ${cacheKey}`);
+      return cached;
+    }
+
+    try {
+      const results = {
+        openstreetmap: [],
+        borme: [],
+        boe: [],
+        total: 0
+      };
+
+      // Búsquedas en paralelo para optimizar tiempo
+      const searches = [];
+
+      if (sources.includes('osm')) {
+        searches.push(
+          overpassService.searchByProfession(profession, city)
+            .then(osmResults => {
+              results.openstreetmap = osmResults.map(item => ({
+                ...item,
+                source: 'OpenStreetMap'
+              }));
+            })
+            .catch(err => {
+              console.error('[SEARCH_MULTI_OSM]', err.message);
+              results.openstreetmap = [];
+            })
+        );
+      }
+
+      if (sources.includes('borme')) {
+        searches.push(
+          bormeService.searchByProfession(profession, city)
+            .then(bormeResults => {
+              results.borme = bormeResults.map(item => ({
+                ...item,
+                source: 'BORME'
+              }));
+            })
+            .catch(err => {
+              console.error('[SEARCH_MULTI_BORME]', err.message);
+              results.borme = [];
+            })
+        );
+      }
+
+      if (sources.includes('boe')) {
+        searches.push(
+          boeService.searchByProfession(profession, city)
+            .then(boeResults => {
+              results.boe = boeResults.map(item => ({
+                ...item,
+                source: 'BOE'
+              }));
+            })
+            .catch(err => {
+              console.error('[SEARCH_MULTI_BOE]', err.message);
+              results.boe = [];
+            })
+        );
+      }
+
+      // Esperar a que terminen todas las búsquedas
+      await Promise.all(searches);
+
+      // Combinar resultados
+      const allResults = [
+        ...results.openstreetmap,
+        ...results.borme,
+        ...results.boe
+      ];
+
+      results.total = allResults.length;
+      results.combined = allResults;
+
+      // Cachear resultado (cache más corto para multi-source)
+      cacheService.set(cacheKey, results, 1800); // 30 minutos
+
+      console.log(`[SEARCH_MULTI] ✅ ${results.total} resultados encontrados en múltiples fuentes`);
+      return results;
+    } catch (error) {
+      console.error('[SEARCH_MULTI_ERROR]', error.message);
       throw error;
     }
   },
